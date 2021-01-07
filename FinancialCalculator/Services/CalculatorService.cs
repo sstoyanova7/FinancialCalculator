@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace FinancialCalculator.Services
 {
@@ -14,10 +15,11 @@ namespace FinancialCalculator.Services
 
         private readonly ILogger<CalculatorService> _logger;
 
-        CalculatorService(ILogger<CalculatorService> logger)
-        {
-            _logger = logger;
-        }
+        
+        //CalculatorService(ILogger<CalculatorService> logger)
+        //{
+        //    _logger = logger;
+        //}
 
         public NewLoanResponseModel CalculateNewLoan(NewLoanRequestModel requestModel)
         {
@@ -57,6 +59,31 @@ namespace FinancialCalculator.Services
                 return new NewLoanResponseModel
                 {
                     Status = System.Net.HttpStatusCode.InternalServerError
+                };
+            }
+        }
+
+        public LeasingLoanResponseModel CalculateLeasingLoan(LeasingLoanRequestModel requestModel)
+        {
+            //TO DO: AnnualPercentCost how to calculate ?
+            try
+            {
+                var startingFeeCost = CalcHelpers.GetFeeCost(requestModel.StartingFee, requestModel.ProductPrice);
+                return new LeasingLoanResponseModel
+                {
+                    Status = HttpStatusCode.OK,
+                    //AnnualPercentCost { get; set; } //in percent
+                    TotalCost = startingFeeCost + requestModel.StartingInstallment + requestModel.Period * requestModel.MonthlyInstallment,
+                    TotalFees = startingFeeCost
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occured while trying to calculate leasing loan.\nInput: {requestModel}\nMessage: {ex.Message}");
+
+                return new LeasingLoanResponseModel
+                {
+                    Status = HttpStatusCode.InternalServerError
                 };
             }
         }
@@ -136,16 +163,17 @@ namespace FinancialCalculator.Services
                 var currentPrincipalBalance = CalcHelpers.CalculatePrincipalBalance(installments[i - 1]);
                 var interestInstallment = CalcHelpers.CalculateInterestInstallment(requestModel.Interest, currentPrincipalBalance);
                 var fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
+                var principalInstallment = i == requestModel.Period ? requestModel.LoanAmount - installments.Sum(x => x.Value.PrincipalInstallment) : pmt - interestInstallment;
                 installments.TryAdd(i, new InstallmentForRepaymentPlanModel
                 {
                     Id = i,
                     Date = DateTime.UtcNow.Date.AddDays(i),
-                    MonthlyInstallment = pmt,
-                    PrincipalInstallment = pmt - interestInstallment,
+                    MonthlyInstallment = i == requestModel.Period ? principalInstallment + interestInstallment : pmt,
+                    PrincipalInstallment = principalInstallment,
                     InterestInstallment = interestInstallment,
                     PrincipalBalance = currentPrincipalBalance,
                     Fees = fees,
-                    CashFlow = -pmt - fees
+                    CashFlow = - pmt - fees
                 });
             }
 

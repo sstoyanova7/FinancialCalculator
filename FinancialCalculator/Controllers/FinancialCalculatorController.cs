@@ -40,7 +40,7 @@ namespace FinancialCalculator.Controllers
         [Route("api/calculateLeasingLoan")]
         public LeasingLoanResponseModel CalculateLeasingLoan([FromBody] LeasingLoanRequestModel requestModel)
         {
-            return new LeasingLoanResponseModel();
+            return _service.CalculateLeasingLoan(requestModel);
         }
     }
 }

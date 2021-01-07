@@ -49,7 +49,7 @@ namespace FinancialCalculator.Utilities
             return Math.Round(rate * balance, 2);
         }
 
-        private static decimal GetFeeCost(FeeModel fee, decimal loanAmount)
+        public static decimal GetFeeCost(FeeModel fee, decimal loanAmount)
         {
             return fee.ValueType == FeeValueType.Currency ? fee.Value : Math.Round(loanAmount * fee.Value / 100, 2);
         }
