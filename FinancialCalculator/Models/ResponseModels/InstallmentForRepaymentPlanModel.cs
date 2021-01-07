@@ -13,6 +13,5 @@ namespace FinancialCalculator.Models.ResponseModels
         public decimal Fees { get; set; }
         public decimal CashFlow { get; set; } // ??
 
-
     }
 }

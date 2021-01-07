@@ -1,7 +1,9 @@
 ﻿using FinancialCalculator.Models.RequestModels;
 using FinancialCalculator.Models.ResponseModels;
+using FinancialCalculator.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace FinancialCalculator.Controllers
 {
@@ -10,10 +12,12 @@ namespace FinancialCalculator.Controllers
     public class FinancialCalculatorController : ControllerBase
     {
         private readonly ILogger<FinancialCalculatorController> _logger;
+        private readonly ICalculatorService _service;
 
-        public FinancialCalculatorController(ILogger<FinancialCalculatorController> logger)
+        public FinancialCalculatorController(ILogger<FinancialCalculatorController> logger, ICalculatorService service)
         {
             _logger = logger;
+            _service = service;
         }
 
 
@@ -21,8 +25,9 @@ namespace FinancialCalculator.Controllers
         [Route("api/calculateNewLoan")]
         public NewLoanResponseModel CalculateNewLoan([FromBody] NewLoanRequestModel requestModel)
         {
-            return new NewLoanResponseModel();
+            return _service.CalculateNewLoan(requestModel);
         }
+
 
         [HttpPost] //should it be post?
         [Route("api/calculateRefinancingLoan")]

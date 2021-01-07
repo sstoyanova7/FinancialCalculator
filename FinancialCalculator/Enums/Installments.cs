@@ -2,7 +2,7 @@
 {
     public enum Installments
     {
-        AnnuityInstallment,
-        DecreasingInstallment
+        AnnuityInstallment = 0,
+        DecreasingInstallment = 1,
     }
 }

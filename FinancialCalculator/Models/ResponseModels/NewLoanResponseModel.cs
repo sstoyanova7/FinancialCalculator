@@ -11,6 +11,6 @@ namespace FinancialCalculator.Models.ResponseModels
         public decimal FeesCost { get; set; }
         public decimal InterestsCost { get; set; }
         public decimal InstallmentsCost { get; set; }
-        List<InstallmentForRepaymentPlanModel> RepaymentPlan { get; set; }
+        public List<InstallmentForRepaymentPlanModel> RepaymentPlan { get; set; }
     }
 }

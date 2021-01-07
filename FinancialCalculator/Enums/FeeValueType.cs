@@ -2,7 +2,7 @@
 {
     public enum FeeValueType
     {
-        Percent,
-        Currency
+        Percent = 0,
+        Currency = 1
     }
 }
