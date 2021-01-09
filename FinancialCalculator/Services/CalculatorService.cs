@@ -16,10 +16,10 @@ namespace FinancialCalculator.Services
         private readonly ILogger<CalculatorService> _logger;
 
         
-        //CalculatorService(ILogger<CalculatorService> logger)
-        //{
-        //    _logger = logger;
-        //}
+        public CalculatorService(ILogger<CalculatorService> logger)
+        {
+            _logger = logger;
+        }
 
         public NewLoanResponseModel CalculateNewLoan(NewLoanRequestModel requestModel)
         {
@@ -164,16 +164,17 @@ namespace FinancialCalculator.Services
                 var interestInstallment = CalcHelpers.CalculateInterestInstallment(requestModel.Interest, currentPrincipalBalance);
                 var fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
                 var principalInstallment = i == requestModel.Period ? requestModel.LoanAmount - installments.Sum(x => x.Value.PrincipalInstallment) : pmt - interestInstallment;
+                var monthlyInstallment = i == requestModel.Period ? principalInstallment + interestInstallment : pmt;
                 installments.TryAdd(i, new InstallmentForRepaymentPlanModel
                 {
                     Id = i,
                     Date = DateTime.UtcNow.Date.AddDays(i),
-                    MonthlyInstallment = i == requestModel.Period ? principalInstallment + interestInstallment : pmt,
+                    MonthlyInstallment = monthlyInstallment,
                     PrincipalInstallment = principalInstallment,
                     InterestInstallment = interestInstallment,
                     PrincipalBalance = currentPrincipalBalance,
                     Fees = fees,
-                    CashFlow = - pmt - fees
+                    CashFlow = - monthlyInstallment - fees
                 });
             }
 
