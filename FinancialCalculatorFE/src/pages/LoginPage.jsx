@@ -19,10 +19,7 @@ onSubmit(event) {
        
     console.log(this.state.username, this.state.password) 
     event.preventDefault()
-    this.setState({
-        username: "",
-        password: ""
-    })
+    
 }
 
 handleChange(event) {

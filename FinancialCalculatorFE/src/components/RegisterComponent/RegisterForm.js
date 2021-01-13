@@ -14,6 +14,7 @@ function RegisterForm(props) {
                         <ul>
                             <li> <Link to="/">Home</Link> </li>
                             <li> <Link to="/login">Login</Link> </li>
+                           
                         </ul>
                     </nav>  
                     <div className="container">
@@ -43,7 +44,7 @@ function RegisterForm(props) {
                                 </div>
                                 <div className="form-group">
 
-                                    <label style={{display:"block"}}>Repeat Passowrd</label>
+                                    <label style={{display:"block"}}>Confirm Passoword</label>
                                     <input 
                                         type="text"
                                         value={props.confirmPassword}
@@ -67,8 +68,8 @@ function RegisterForm(props) {
                                 
                                 <button className="btn">Sign In</button>     
                             </form>
-                            <p style={{color: "#fff", fontSize: 20}}>Already have an account?
-                                <Link style={{color:" rgba(0,0,250,1)"}} to="/login"> Sign in here</Link>
+                            <p style={{color: "#fff", fontSize: 20}}>Already have an account? Sign in
+                                <Link style={{color:" rgba(0, 226, 255, 1)"}} to="/login"> here</Link>
                             </p>
                            
                         </div>

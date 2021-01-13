@@ -25,6 +25,7 @@ class RegisterPage extends Component {
     onSubmit(event) {
         event.preventDefault()  
         console.log(this.state.newUsername, this.state.newPassword, this.state.confirmPassword, this.state.newEmailAddress)
+
         
     }
     render() {

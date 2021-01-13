@@ -17,7 +17,7 @@ function LoginForm(props) {
                     </nav>  
                     <div className="container">
                         <div className="form-wrap">
-                            <h1 style={{fontSize:40}}>Sign in</h1>
+                            <h1 style={{fontSize:40}}>Sign In</h1>
                             <form onSubmit={props.onSubmit}>     
                                 <div className="form-group">
 
@@ -41,13 +41,13 @@ function LoginForm(props) {
                                         onChange={props.handleChange}  
                                     />
                                 </div>
-                                <button className="btn">Sign In</button>     
+                                <button className="btn">Sign In</button>
                             </form>
+                             
                             <p style={{color: "#fff", fontSize: 20}}>
                                 Don't have an account? Sign up
-                                <Link to="/register" style={{color:" rgba(0,0,250,1)"}}> here.</Link>
+                                <Link to="/register" style={{color:"rgba(0, 226, 255, 1)"}}> here.</Link>
                             </p>
-                               
                         </div>
                     </div>
                     <div>

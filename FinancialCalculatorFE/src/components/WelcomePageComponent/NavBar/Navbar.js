@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 function Navbar() {
 
     return(
-            <nav className="navbar">
+        <nav className="navbar">
            <h1>Financial Calculator</h1>
            <ul>
                <li> <Link to="/login">Login</Link> </li>

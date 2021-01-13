@@ -7,10 +7,9 @@ function Showcase() {
 
     return (
         <div>
-
             <div className="header">
                 <Navbar />
-                <div className="inner-header flex">
+                <div className="inner-header flex"> 
                     <div className="inner-header-content">
                     <h1 >Welcome to the most prestigious</h1>
                     <h1>Financial Calculator</h1>
@@ -23,7 +22,7 @@ function Showcase() {
                 <div>
                     <svg className="waves"
                      viewBox="0 24 150 28" preserveAspectRatio="none" 
-                     shapRendering="auto">
+                     shapeRendering="auto">
                         <defs>
                             <path 
                                 id="gentle-wave" 
@@ -40,8 +39,6 @@ function Showcase() {
                 </div>
 
             </div>
-  
-           
         </div >
     )
 }

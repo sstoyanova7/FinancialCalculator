@@ -2,6 +2,7 @@
 * {
   margin: 0;
   padding:0;
+  box-sizing: border-box;
 }
 
 .container {
@@ -32,22 +33,23 @@
   margin-top:15px;
 }
 
-.btn {
+
+
+.form-wrap form > .btn {
+  display: block;
   background-color: rgba(0,172,193,1);
-  font-size: 14px;
-  font-family:
-  Arial, Helvetica, sans-serif;
-  display:block;
-  width:50%;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
   padding:10px;
-  margin-left:4.8rem;
-  margin-top:15px;
-  margin-bottom:8px;
+  margin:auto;
+  margin-top:0.75rem;
+  margin-bottom:10px;
   color:#5428b7;
   cursor: pointer;
   transition:all 0.5s ease;
   border-radius:10px;
   border-color: #00acc1;
+  width:80%;
 
 }
 
