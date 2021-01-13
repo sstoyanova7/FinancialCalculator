@@ -17,6 +17,12 @@ namespace FinancialCalculator.Utilities
             return Math.Round(((rate + (rate / denominator)) * loanAmount), 2);
         }
 
+        //Annual Percentage Rate 
+        public static decimal CalculateAPR(decimal fees, decimal interest, decimal principal, decimal period)
+        {
+            return Math.Round(((fees + interest) / principal / period) * 365 * 100, 2);
+        }
+
         public static decimal CalculateStartingFeesCost(decimal loanAmount, IEnumerable<FeeModel> fees)
         {
             //Get the sum of all starting fees

@@ -4,6 +4,7 @@ namespace FinancialCalculator.Models.RequestModels
 {
     public class LeasingLoanRequestModel
     {
+        public string UserAgent { get; set; }
         public decimal ProductPrice { get; set; }
         public decimal StartingInstallment { get; set; } 
         public int Period { get; set; } //in months
