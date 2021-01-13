@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\src\App.js" />
+    <None Include="wwwroot\src\axios\axios.js" />
+    <None Include="wwwroot\src\components\LeasingCalculator\LeasingCalculator.css" />
+    <None Include="wwwroot\src\components\LeasingCalculator\LeasingCalculator.js" />
+    <None Include="wwwroot\src\components\LoginComponent\LoginForm\LoginForm.css" />
+    <None Include="wwwroot\src\components\LoginComponent\LoginForm\LoginForm.js" />
+    <None Include="wwwroot\src\components\RegisterComponent\RegisterForm.css" />
+    <None Include="wwwroot\src\components\RegisterComponent\RegisterForm.js" />
+    <None Include="wwwroot\src\components\WelcomePageComponent\NavBar\Navbar.css" />
+    <None Include="wwwroot\src\components\WelcomePageComponent\NavBar\Navbar.js" />
+    <None Include="wwwroot\src\components\WelcomePageComponent\Showcase\Showcase.css" />
+    <None Include="wwwroot\src\components\WelcomePageComponent\Showcase\Showcase.js" />
+    <None Include="wwwroot\src\exceptions\validations.js" />
+    <None Include="wwwroot\src\index.js" />
+    <None Include="wwwroot\src\pages\LeasingCalculator.jsx" />
+    <None Include="wwwroot\src\pages\LoginPage.jsx" />
+    <None Include="wwwroot\src\pages\RegisterPage.jsx" />
+    <None Include="wwwroot\src\pages\WelcomePage.jsx" />
+    <None Include="wwwroot\src\TODO" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.11" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinancialCalculator.BL\FinancialCalculator.BL.csproj" />
+    <ProjectReference Include="..\FinancialCalculator.Models\FinancialCalculator.Models.csproj" />
+  </ItemGroup>
+
+	<Target Name="DebugRunWebpack" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug' And !Exists('$(ScriptsDist)')">
+		<!-- Ensure node.js is installed -->
+		<Exec Command="node --version" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+		<Error Condition="'$(ErrorCode)' != '0'" Text="node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+
+		<!-- Build the JS resources in development mode -->
+		<Message Importance="high" Text="Building with webpack in development mode..." />
+		<Exec Command="npm run build" />
+	</Target>
+
+	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+		<Message Importance="high" Text="Building with webpack in production mode..." />
+		<!-- Exclude old dist files from publish output-->
+		<ItemGroup>
+			<PrevScriptFiles Include="$(ScriptsDist)\**" />
+			<ResolvedFileToPublish Remove="@(PrevScriptFiles->'%(FullPath)')" />
+		</ItemGroup>
+
+		<Exec Command="npm install" IgnoreExitCode="true" />
+		<Exec Command="npm run build:prod" />
+
+		<!-- Include the freshly built files in the publish output -->
+		<ItemGroup>
+			<DistFiles Include="$(ScriptsDist)\**" />
+			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+				<RelativePath>%(DistFiles.Identity)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+	</Target>
+
+</Project>
