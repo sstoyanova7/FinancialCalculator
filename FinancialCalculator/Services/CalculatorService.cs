@@ -40,14 +40,14 @@ namespace FinancialCalculator.Services
 
                 var totalFeesCost = plan.Sum(x => x.Fees);
                 var totalMonthlyInstallmentsCost = plan.Sum(x => x.MonthlyInstallment);
-
+                var totalInterestCost = plan.Sum(x => x.InterestInstallment);
                 return new NewLoanResponseModel
                 {
-                    Status = System.Net.HttpStatusCode.OK,
-                    AnnualPercentCost = 0, //how the fuck is this calculated
+                    Status = HttpStatusCode.OK,
+                    AnnualPercentCost = CalcHelpers.CalculateAPR(totalFeesCost, totalInterestCost, requestModel.LoanAmount, requestModel.Period),
                     TotalCost = totalMonthlyInstallmentsCost + totalFeesCost,
                     FeesCost = totalFeesCost,
-                    InterestsCost = plan.Sum(x => x.InterestInstallment),
+                    InterestsCost = totalInterestCost,
                     InstallmentsCost = totalMonthlyInstallmentsCost,
                     RepaymentPlan = plan
                 };
@@ -68,13 +68,16 @@ namespace FinancialCalculator.Services
             //TO DO: AnnualPercentCost how to calculate ?
             try
             {
-                var startingFeeCost = CalcHelpers.GetFeeCost(requestModel.StartingFee, requestModel.ProductPrice);
+                var totalFees = CalcHelpers.GetFeeCost(requestModel.StartingFee, requestModel.ProductPrice);
+                var totalCost = totalFees + requestModel.StartingInstallment + requestModel.Period * requestModel.MonthlyInstallment;
+
+
                 return new LeasingLoanResponseModel
                 {
                     Status = HttpStatusCode.OK,
-                    //AnnualPercentCost { get; set; } //in percent
-                    TotalCost = startingFeeCost + requestModel.StartingInstallment + requestModel.Period * requestModel.MonthlyInstallment,
-                    TotalFees = startingFeeCost
+                    //AnnualPercentCost
+                    TotalCost = totalCost,
+                    TotalFees = totalFees
                 };
             }
             catch (Exception ex)
