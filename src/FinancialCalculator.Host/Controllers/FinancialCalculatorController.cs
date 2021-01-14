@@ -4,30 +4,19 @@
     using Models.ResponseModels;
     using Services;
     using Microsoft.AspNetCore.Mvc;
-    using System;
-    using Serilog;
 
     [ApiController]
     [Route("[controller]")]
     public class FinancialCalculatorController : ControllerBase
     {
-        private readonly ILogger _logger;
         private readonly ICalculatorService _service;
 
-        public FinancialCalculatorController(ILogger logger, ICalculatorService service)
+        public FinancialCalculatorController(ICalculatorService service)
         {
-            _logger = logger.ForContext<FinancialCalculatorController>();
             _service = service;
         }
 
-        [HttpGet]
-        [Route("api/test")]
-        public void Test()
-        {
-            _logger.Information("Test controller is called from {caller}", HttpContext.Request.Headers["Hi"]);
-        }
-
-        [HttpPost] //should it be post?
+        [HttpPost]
         [Route("api/calculateNewLoan")]
         public NewLoanResponseModel CalculateNewLoan([FromBody] NewLoanRequestModel requestModel)
         {
@@ -35,14 +24,14 @@
         }
 
 
-        [HttpPost] //should it be post?
+        [HttpPost]
         [Route("api/calculateRefinancingLoan")]
         public RefinancingLoanResponseModel CalculateRefinancingLoan([FromBody] RefinancingLoanRequestModel requestModel)
         {
-            return new RefinancingLoanResponseModel();
+            return _service.CalculateRefinancingLoan(requestModel);
         }
 
-        [HttpPost] //should it be post?
+        [HttpPost]
         [Route("api/calculateLeasingLoan")]
         public LeasingLoanResponseModel CalculateLeasingLoan([FromBody] LeasingLoanRequestModel requestModel)
         {

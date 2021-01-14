@@ -58,7 +58,82 @@
 
                 return new NewLoanResponseModel
                 {
-                    Status = System.Net.HttpStatusCode.InternalServerError
+                    Status = HttpStatusCode.InternalServerError
+                };
+            }
+        }
+
+        public RefinancingLoanResponseModel CalculateRefinancingLoan(RefinancingLoanRequestModel requestModel)
+        {
+            try
+            {
+                var currentLoanCalculated = CalculateNewLoan(
+                    new NewLoanRequestModel
+                    {
+                        LoanAmount = requestModel.LoanAmount,
+                        Period = requestModel.Period,
+                        Interest = requestModel.Interest,
+                        InstallmentType = Installments.AnnuityInstallment
+                    });
+
+                var periodLeft = requestModel.Period - requestModel.CountOfPaidInstallments;
+                var monthlyInstallmentCurrentLoan = currentLoanCalculated.RepaymentPlan.First(x => x.Id == 1).MonthlyInstallment;
+                var moneyLeftToBePaid = periodLeft * monthlyInstallmentCurrentLoan;
+                var earlyInstallmentsFeeInCurrency = CalcHelpers.GetFeeCost(requestModel.EarlyInstallmentsFee, moneyLeftToBePaid);
+
+                var newLoanCalculated = CalculateNewLoan(
+                    new NewLoanRequestModel
+                    {
+                        LoanAmount = Math.Floor(moneyLeftToBePaid),
+                        Period = periodLeft,
+                        Interest = requestModel.NewInterest,
+                        InstallmentType = Installments.AnnuityInstallment,
+                        Fees = new List<FeeModel>
+                        {
+                            new FeeModel
+                            {
+                                Type = FeeType.StartingApplicationFee,
+                                Value = requestModel.StartingFeesCurrency,
+                                ValueType = FeeValueType.Currency
+                            },
+                            new FeeModel
+                            {
+                                Type = FeeType.OtherStartingFees,
+                                Value = requestModel.StartingFeesPercent,
+                                ValueType = FeeValueType.Percent
+                            }
+                        }                        
+                    });
+
+                var monthlyInstallmentNewLoan = newLoanCalculated.RepaymentPlan.First(x => x.Id == 1).MonthlyInstallment;
+
+                return new RefinancingLoanResponseModel
+                {
+                    Status = HttpStatusCode.OK,
+                    CurrentLoan = new RefinancingLoanHelperModel
+                    {
+                        Interest = requestModel.Interest,
+                        Period = requestModel.Period,
+                        EarlyInstallmentsFee = earlyInstallmentsFeeInCurrency,
+                        MonthlyInstallment = monthlyInstallmentCurrentLoan,
+                        Total = moneyLeftToBePaid
+                    },
+                    NewLoan = new RefinancingLoanHelperModel
+                    {
+                        Interest = requestModel.NewInterest,
+                        Period = periodLeft,
+                        MonthlyInstallment = monthlyInstallmentNewLoan,
+                        Total = periodLeft * monthlyInstallmentNewLoan + earlyInstallmentsFeeInCurrency
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"An error occured while trying to calculate new loan.\nInput: {requestModel}\nMessage: {ex.Message}");
+
+                return new RefinancingLoanResponseModel
+                {
+                    Status = HttpStatusCode.InternalServerError
                 };
             }
         }
@@ -90,8 +165,6 @@
                 };
             }
         }
-
-        //TO DO: Decreasing and Annuity Plan -> check diffs and maybe combine in one method
 
         private IEnumerable<InstallmentForRepaymentPlanModel>  GetDecreasingPlan(NewLoanRequestModel requestModel)
         {

@@ -56,7 +56,12 @@
 
         public static decimal GetFeeCost(FeeModel fee, decimal loanAmount)
         {
-            return fee.ValueType == FeeValueType.Currency ? fee.Value : Math.Round(loanAmount * fee.Value / 100, 2);
+            return fee.ValueType == FeeValueType.Currency ? fee.Value : GetFeeCost(fee.Value, loanAmount);
+        }
+
+        public static decimal GetFeeCost(decimal feePercent, decimal loanAmount)
+        {
+            return Math.Round(loanAmount * feePercent / 100, 2);
         }
     }
 }
