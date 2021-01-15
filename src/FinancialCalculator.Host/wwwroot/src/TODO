@@ -12,7 +12,7 @@ Register form:
 [] Check if username is already in use
 [] POST information to => {address}
 []
-
+[] input must be > 0
 
 [] Private Router to the calculator.html needs to be made
 

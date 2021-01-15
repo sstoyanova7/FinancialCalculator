@@ -23,8 +23,8 @@ function LeasingCalculator(props) {
                         <label>Price of goods</label>
                         <input 
                             type="text"
-                            value={props.valGoods}
-                            name="valGoods"
+                            value={props.ProductPrice}
+                            name="ProductPrice"
                             placeholder="Price of the Goods"
                             onChange={props.handleChange}
                             
@@ -32,29 +32,29 @@ function LeasingCalculator(props) {
                          <label>Down Payment</label>
                         <input 
                             type="text"
-                            value={props.downPayment}
-                            name="downPayment"
+                            value={props.StartingInstallment}
+                            name="StartingInstallment"
                             onChange={props.handleChange}
                         />
                          <label>Lease Term in Months</label>
                         <input 
                             type="text"
-                            value={props.leaseTerm}
-                            name="leaseTerm"
+                            value={props.Period}
+                            name="Period"
                             onChange={props.handleChange}
                         />
                          <label>Monthly Payment</label>
                         <input 
                             type="text"
-                            value={props.monthlyPayment}
-                            name="monthlyPayment"
+                            value={props.MonthlyInstallment}
+                            name="MonthlyInstallment"
                             onChange={props.handleChange}
                         />
                          <label>Initial Processing Fee</label>
                         <input 
                             type="text"
-                            value={props.initProcessingFee}
-                            name="initProcessingFee"
+                            value={props.StartingFeeValue}
+                            name="StartingFeeValue"
                             onChange={props.handleChange}
                         />
                         <button className="btn" >Submit</button>
