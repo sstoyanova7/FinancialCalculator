@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import LeasingCalculator from '../components/LeasingCalculator/LeasingCalculator'
-import { canSubmit, checkIfNumber, isEmpty } from '../exceptions/validations'
+import { validate } from '../exceptions/validations'
 import axios from 'axios';
 class LeasCalcPage extends Component {
 
     constructor() {
         super()
-        this.isNumber = false
+
 
         this.state = {
+            errors: [],
+            isVisible: "none",
             ProductPrice: "",
             StartingInstallment: "",
             Period: "",
@@ -16,26 +18,43 @@ class LeasCalcPage extends Component {
             StartingFeeValue: "",
             StartingFeeValueType: 0,
             StartingFeeType: "",
-            anualPercentExpense: "300",
-            totalPaidWithFees: "100",
-            totalFees: "200"
+
+            responseInformation: {
+                statusCodeText: "",
+                statusCode: "",
+                anualPercentExpense: "",
+                totalCost: "",
+                totalFees: ""
+            }
+
         }
     }
     handleChange = (event) => {
         const { name, value, style } = event.target
-        this.isNumber = checkIfNumber(value)
+
+
         this.setState({
             [name]: value,
         })
-        style.borderColor = this.isNumber ? '' : 'red'
+        style.border = ''
+
+
 
     }
+
+
 
     handleSubmit = (event) => {
 
         event.preventDefault();
-        if (!canSubmit(event) && !isEmpty(event)) {
-            let information = {
+
+        const errors = validate(event);
+
+        if (errors.length > 0) {
+            this.setState({ errors, isVisible: '' })
+        } else {
+            this.setState({ isVisible: 'none' })
+            const information = {
                 'UserAgent': "Mozilla",
                 'ProductPrice': parseFloat(this.state.ProductPrice),
                 'StartingInstallment': parseFloat(this.state.StartingInstallment),
@@ -51,13 +70,36 @@ class LeasCalcPage extends Component {
                 method: 'post',
                 url: '/FinancialCalculator/api/calculateLeasingLoan',
                 data: {
-                     ...information 
-                }   
-            }).then(res => { console.log(res.data) }).catch(err => { console.log(err) })
-        } else {
-            console.log('err')
+                    ...information
+                }
+            }).then(res => {
+
+                console.log(res.data)
+                this.setState({
+                    ...{
+                        responseInformation: {
+                            statusCodeTest: res.statusText,
+                            statusCode: res.data['status'],
+                            anualPercentExpense: res.data['annualPercentCost'],
+                            totalCost: res.data['totalCost'],
+                            totalFees: res.data['totalFees']
+                        }
+                    }
+                })
+
+            }).catch(err => { console.log(err) })
         }
+        console.log(errors)
+
+
+        //if (!canSubmit(event) && !isEmpty(event)) {
+
+
+        //} else {
+        //    console.log('err')
+        //}
     }
+
 
     render() {
 
@@ -67,6 +109,10 @@ class LeasCalcPage extends Component {
             <LeasingCalculator
                 handleChange={this.handleChange}
                 handleSubmit={this.handleSubmit}
+                handleClick={this.handleClick}
+                isVisible={this.state.isVisible}
+                errorMessages={this.state.errors}
+                {...this.state.responseInformation}
                 {...this.state}
             />
         )

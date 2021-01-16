@@ -4,67 +4,96 @@ import "./LeasingCalculator.css"
 
 function LeasingCalculator(props) {
 
+   
+    const errors = props.errorMessages.map((err, index) => {
+        const errorLength = props.errorMessages.length;
+        if (errorLength === index + 1) {
+            return (
+                <div className="error-wrap" key={index}>
+                    <p>{err}</p>
+                </div>
+                )
+        } else {
+            return (
+                <div className="error-wrap" key={index}>
+                    <p>{err}</p>
+                    <hr />
+                </div>
+                )
+        }
+        
+    })
+
     return(
         <div>
             <div className="header">
                 <nav className="navbar">
                         <h1>Leas Calculator</h1>
-                        <ul> {/* change Links to other 2 calculators  
-                              valGoods downPayment leaseTerm monthlyPayment initProcessingFee
-
-                              */}
+                        <ul> 
                             <li> <Link to="/">Other Clac</Link> </li>
                             <li> <Link to="/login">Other Calc</Link> </li>
                             <li> <Link to="/login">Logout</Link> </li>
                         </ul>
                 </nav>  
                 <div className="container">
+                    <div className="tooltip">
+                        <p style={{ display: props.isVisible }}>Invalid Data. Hover me.</p>
+
+                        <span className="tooltiptext">{errors}</span>
+                        
+                    </div>
                     <form className="calculator-form" onSubmit={props.handleSubmit}>
-                        <label>Price of goods</label>
-                        <input 
+                       
+                        
+                        <label>Product Price</label>
+                        <input  
                             type="text"
                             value={props.ProductPrice}
+                            placeholder={props.placeholder}
                             name="ProductPrice"
-                            placeholder="Price of the Goods"
-                            onChange={props.handleChange}
-                            
+                            onChange={props.handleChange}     
                         />
-                         <label>Down Payment</label>
+
+                         <label>Starting Installment</label>
                         <input 
                             type="text"
                             value={props.StartingInstallment}
                             name="StartingInstallment"
                             onChange={props.handleChange}
                         />
-                         <label>Lease Term in Months</label>
+                         <label>Lease Period (In Months)</label>
                         <input 
                             type="text"
                             value={props.Period}
                             name="Period"
                             onChange={props.handleChange}
+                            
                         />
-                         <label>Monthly Payment</label>
+                         <label>Monthly Installment</label>
                         <input 
                             type="text"
                             value={props.MonthlyInstallment}
                             name="MonthlyInstallment"
                             onChange={props.handleChange}
                         />
-                         <label>Initial Processing Fee</label>
+                         <label>Starting Fee</label>
                         <input 
                             type="text"
                             value={props.StartingFeeValue}
                             name="StartingFeeValue"
                             onChange={props.handleChange}
                         />
-                        <button className="btn" >Submit</button>
+                        <button  className="btn" >Submit</button>
                     </form>
+                    
                     <div className="leas-calc-information">
-                            <h2>Total Fees: {props.totalFees}</h2>
-                            <h2>Total Paid with Fees: {props.totalPaidWithFees}</h2> 
-                            <h2>Anual Percentage Expenses: {props.anualPercentExpense}</h2>
+                        <h2>Total Fees: {props.responseInformation.totalFees}</h2>
+                        <h2>Total Cost: {props.responseInformation.totalCost}</h2> 
+                        <h2>Annual Percent Cost: {props.responseInformation.anualPercentExpense}</h2>
                     </div>
+                    
                 </div>
+
             <div>
                         <svg className="waves"
                         viewBox="0 24 150 28" preserveAspectRatio="none" 
@@ -82,9 +111,10 @@ function LeasingCalculator(props) {
                                 <use xlinkHref="#gentle-wave" x="48" y="7" fill="#fff" />
                             </g>
                         </svg>
-                    </div>
-            </div>
+                </div>
+
         </div>
+  </div>
     )
 }
 

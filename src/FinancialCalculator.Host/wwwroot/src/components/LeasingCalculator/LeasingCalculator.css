@@ -7,6 +7,18 @@
 h2 {
     font-size: 2.5rem;
 }
+
+p {
+    color: #fff;
+    line-height: 13px;
+
+}
+
+
+.container {
+    position:relative;
+}
+
 .btn {
     display:block;
     padding:10px;
@@ -82,3 +94,45 @@ label {
     font-size: 20px;
     color: #fff;
 }
+
+
+.tooltip {
+    
+    position: absolute;
+    top:30px;
+    left:490px;
+    display: inline-block;
+    background-color:red;
+    border-radius:10px;
+}
+.tooltip  p {
+  
+    font-size: 14px;
+    padding:10px;
+}
+
+/* Tooltip text */  
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+   
+    position: absolute;
+    top:33px;
+    left:-9px;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltip .tooltiptext div {
+    
+}
+
