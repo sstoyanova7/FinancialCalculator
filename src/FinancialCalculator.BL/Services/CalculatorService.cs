@@ -9,24 +9,45 @@
     using System.Linq;
     using Serilog;
     using System.Net;
+    using FinancialCalculator.BL.Validation;
 
     public class CalculatorService : ICalculatorService
     {
 
         private readonly ILogger _logger;
+        private IValidator<LeasingLoanRequestModel> _leasingLoanValidator;
+        private IValidator<NewLoanRequestModel> _newLoanValidator;
+        private IValidator<RefinancingLoanRequestModel> _refinancingLoanValidator;
 
-        
-        public CalculatorService(ILogger logger)
+
+        public CalculatorService(ILogger logger,
+            IValidator<LeasingLoanRequestModel> leasingLoanValidator,
+            IValidator<NewLoanRequestModel> newLoanValidator,
+            IValidator<RefinancingLoanRequestModel> refinancingLoanValidator)
         {
             _logger = logger.ForContext<CalculatorService>();
+            _leasingLoanValidator = leasingLoanValidator;
+            _newLoanValidator = newLoanValidator;
+            _refinancingLoanValidator = refinancingLoanValidator;
         }
 
         public NewLoanResponseModel CalculateNewLoan(NewLoanRequestModel requestModel)
         {
+            var validated = _newLoanValidator.Validate(requestModel);
+            if (!validated.IsValid)
+            {
+                _logger.Error($"New Loan BadRequest! {validated.GetValidationSummary()}");
+
+                return new NewLoanResponseModel
+                {
+                    Status = HttpStatusCode.BadRequest,
+                    ErrorMessage = validated.GetValidationSummary()
+                };
+            }
 
             //TO DO: PromoPeriod % Promorate
             //TO DO: GracePeriod
-            //TO DO: think of validations
+            //TO DO: think of other validations
             //TO DO: add exception handling
             //TO DO: check logs format
             //TO DO: calculate AnnualPercentCost ?!
@@ -58,13 +79,26 @@
 
                 return new NewLoanResponseModel
                 {
-                    Status = HttpStatusCode.InternalServerError
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = "Something went wrong. Please contact our support team."
                 };
             }
         }
 
         public RefinancingLoanResponseModel CalculateRefinancingLoan(RefinancingLoanRequestModel requestModel)
         {
+            var validated = _refinancingLoanValidator.Validate(requestModel);
+            if (!validated.IsValid)
+            {
+                _logger.Error($"Refinancing Loan BadRequest! {validated.GetValidationSummary()}");
+
+                return new RefinancingLoanResponseModel
+                {
+                    Status = HttpStatusCode.BadRequest,
+                    ErrorMessage = validated.GetValidationSummary()
+                };
+            }
+
             try
             {
                 var currentLoanCalculated = CalculateNewLoan(
@@ -102,7 +136,7 @@
                                 Value = requestModel.StartingFeesPercent,
                                 ValueType = FeeValueType.Percent
                             }
-                        }                        
+                        }
                     });
 
                 var monthlyInstallmentNewLoan = newLoanCalculated.RepaymentPlan.First(x => x.Id == 1).MonthlyInstallment;
@@ -133,13 +167,26 @@
 
                 return new RefinancingLoanResponseModel
                 {
-                    Status = HttpStatusCode.InternalServerError
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = "Something went wrong. Please contact our support team."
                 };
             }
         }
 
         public LeasingLoanResponseModel CalculateLeasingLoan(LeasingLoanRequestModel requestModel)
         {
+            var validated = _leasingLoanValidator.Validate(requestModel);
+            if (!validated.IsValid)
+            {
+                _logger.Error($"Leasing Loan BadRequest! {validated.GetValidationSummary()}");
+
+                return new LeasingLoanResponseModel
+                {
+                    Status = HttpStatusCode.BadRequest,
+                    ErrorMessage = validated.GetValidationSummary()
+                };
+            }
+
             //TO DO: AnnualPercentCost how to calculate ?
             try
             {
@@ -161,12 +208,13 @@
 
                 return new LeasingLoanResponseModel
                 {
-                    Status = HttpStatusCode.InternalServerError
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = "Something went wrong. Please contact our support team."
                 };
             }
         }
 
-        private IEnumerable<InstallmentForRepaymentPlanModel>  GetDecreasingPlan(NewLoanRequestModel requestModel)
+        private IEnumerable<InstallmentForRepaymentPlanModel> GetDecreasingPlan(NewLoanRequestModel requestModel)
         {
             var principalInstallment = Math.Round(requestModel.LoanAmount / requestModel.Period, 2);
             var lastPrincipalInstallment = requestModel.LoanAmount - (requestModel.Period - 1) * principalInstallment;
@@ -205,7 +253,7 @@
                     InterestInstallment = interestInstallment,
                     PrincipalBalance = currentPrincipalBalance,
                     Fees = fees,
-                    CashFlow = - monthlyInstallment - fees
+                    CashFlow = -monthlyInstallment - fees
                 });
             }
 
@@ -250,7 +298,7 @@
                     InterestInstallment = interestInstallment,
                     PrincipalBalance = currentPrincipalBalance,
                     Fees = fees,
-                    CashFlow = - monthlyInstallment - fees
+                    CashFlow = -monthlyInstallment - fees
                 });
             }
 
