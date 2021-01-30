@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const CURRENT_PATH = __dirname;
 
+
 module.exports = {
     mode: "development",
 

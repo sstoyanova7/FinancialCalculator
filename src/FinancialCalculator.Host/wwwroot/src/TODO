@@ -1,7 +1,7 @@
 Login form:
 [] Validation for username - length of chars - min = 4 max = 20
 [] Validation for 
-[] POST username && password and check if they exist in DP
+
 [] Make method to redirect user to the calculator.html if username && password are validation
 []
 
@@ -12,9 +12,8 @@ Register form:
 [] Check if username is already in use
 [] POST information to => {address}
 []
-
+[] input must be > 0
 
 [] Private Router to the calculator.html needs to be made
 
 
-! Learn what is Axios for HTTP Requests

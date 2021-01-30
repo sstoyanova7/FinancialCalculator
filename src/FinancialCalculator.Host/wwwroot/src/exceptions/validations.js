@@ -1,31 +1,21 @@
-export function checkIfNumber(value) {
-    return ! /^[+-]?\d*(?:[.,]\d*)?$/.test(value) ? false : true
-}
 
-export function canSubmit(event) {
-    let flag = false
-  
-    for(let i = 0; i < event.target.length - 1; i++) {
-        if (event.target[i].style.borderColor === 'red') {
-            console.log('Inputs must contain only numbers')
-            flag = true
-            break
+export function validate(event) {
+    const errors = [];
+    
+    for (let i = 0; i < event.target.length - 1; i++) {
+        if (!/^[+-]?\d*(?:[.,]\d*)?$/.test(event.target[i].value)) {
+            errors.push(`${event.target[i].name} must be only numbers!`)
+            event.target[i].style.border = 'solid 3px red'
+        }
+        if (!event.target[i].value) {
+            errors.push(`${event.target[i].name} mustn't be empty`)
+            event.target[i].style.border = 'solid 3px red'
+        }
+        if (event.target[i].value <= 0) {
+            errors.push(`${event.target[i].name} must be greater than zero`)
+            event.target[i].style.border = 'solid 3px red'
         }
     }
-    return flag
+
+    return errors;
 }
-
-export function isEmpty(event) {
-    let flag = false
-    for(let i = 0; i < event.target.length - 1; i++) {
-        if(!event.target[i].value) {
-            console.log('Inputs must not be empty')
-            flag = true
-            break
-        }
-    }
-    return flag
-}
-
-
-
