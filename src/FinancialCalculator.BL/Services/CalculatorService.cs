@@ -36,12 +36,12 @@
             var validated = _newLoanValidator.Validate(requestModel);
             if (!validated.IsValid)
             {
-                _logger.Error($"New Loan BadRequest! {validated.GetValidationSummary()}");
+                _logger.Error($"New Loan BadRequest! {validated}");
 
                 return new NewLoanResponseModel
                 {
                     Status = HttpStatusCode.BadRequest,
-                    ErrorMessage = validated.GetValidationSummary()
+                    ErrorMessage = validated.ToString()
                 };
             }
 
@@ -90,12 +90,12 @@
             var validated = _refinancingLoanValidator.Validate(requestModel);
             if (!validated.IsValid)
             {
-                _logger.Error($"Refinancing Loan BadRequest! {validated.GetValidationSummary()}");
+                _logger.Error($"Refinancing Loan BadRequest! {validated}");
 
                 return new RefinancingLoanResponseModel
                 {
                     Status = HttpStatusCode.BadRequest,
-                    ErrorMessage = validated.GetValidationSummary()
+                    ErrorMessage = validated.ToString()
                 };
             }
 
@@ -178,12 +178,12 @@
             var validated = _leasingLoanValidator.Validate(requestModel);
             if (!validated.IsValid)
             {
-                _logger.Error($"Leasing Loan BadRequest! {validated.GetValidationSummary()}");
+                _logger.Error($"Leasing Loan BadRequest! {validated}");
 
                 return new LeasingLoanResponseModel
                 {
                     Status = HttpStatusCode.BadRequest,
-                    ErrorMessage = validated.GetValidationSummary()
+                    ErrorMessage = validated.ToString()
                 };
             }
 

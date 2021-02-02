@@ -13,9 +13,9 @@
             _feeModelValidator = feeModelValidator;
         }
 
-        public Validation<NewLoanRequestModel> Validate(NewLoanRequestModel request)
+        public ValidationResult Validate(NewLoanRequestModel request)
         {
-            var validated = new Validation<NewLoanRequestModel>(request);
+            var validated = new ValidationResult();
 
             if (request == null)
             {
@@ -83,7 +83,7 @@
 
             foreach (var fee in invalidFees)
             {
-                validated.AddError(fee.GetValidationSummary());
+                validated.AddError(fee.ToString());
             }
 
             return validated;

@@ -4,9 +4,9 @@
 
     public class RefinancingLoanValidator : IValidator<RefinancingLoanRequestModel>
     {     
-        public Validation<RefinancingLoanRequestModel> Validate(RefinancingLoanRequestModel request)
+        public ValidationResult Validate(RefinancingLoanRequestModel request)
         {
-            var validated = new Validation<RefinancingLoanRequestModel>(request);
+            var validated = new ValidationResult();
 
             if (request == null)
             {

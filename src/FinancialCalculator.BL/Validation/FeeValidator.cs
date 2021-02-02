@@ -7,9 +7,9 @@
 
     public class FeeValidator : IValidator<FeeModel>
     {
-        public Validation<FeeModel> Validate(FeeModel fee)
+        public ValidationResult Validate(FeeModel fee)
         {
-            var validated = new Validation<FeeModel>(fee);
+            var validated = new ValidationResult();
 
             if (fee == null)
             {

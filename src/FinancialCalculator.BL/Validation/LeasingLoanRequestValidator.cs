@@ -10,9 +10,9 @@
             _feeModelValidator = feeModelValidator;
         }
 
-        public Validation<LeasingLoanRequestModel> Validate(LeasingLoanRequestModel request)
+        public ValidationResult Validate(LeasingLoanRequestModel request)
         {
-            var validated = new Validation<LeasingLoanRequestModel>(request);
+            var validated = new ValidationResult();
 
             if (request == null)
             {
@@ -43,7 +43,7 @@
             var startingFeeValidated = _feeModelValidator.Validate(request.StartingFee);
             if (!startingFeeValidated.IsValid)
             {
-                validated.AddError($"Starting fee is not valid. {startingFeeValidated.GetValidationSummary()}.");
+                validated.AddError($"Starting fee is not valid. {startingFeeValidated}.");
                 return validated;
             }
 

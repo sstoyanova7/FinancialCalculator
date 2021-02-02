@@ -2,14 +2,8 @@
 {
     using System.Collections.Generic;
 
-    public class Validation<T>
+    public class ValidationResult
     {
-        public Validation(T validated)
-        {
-            Validated = validated;
-        }
-        public T Validated { get; }
-
         public bool IsValid { get; private set; } = true;
 
         private List<string> Errors { get; } = new List<string>();
@@ -20,14 +14,10 @@
             IsValid = false;
         }
 
-        public string GetValidationSummary()
+        public override string ToString()
         {
             return string.Join(".", Errors);
         }
 
-        public Validation<T> Validate(T objToValidate)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
