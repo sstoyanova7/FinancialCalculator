@@ -11,27 +11,21 @@
     using System.Net;
     using FinancialCalculator.BL.Validation;
 
-    public class CalculatorService : ICalculatorService
+    public class NewLoanCalculatorService : ICalculatorService<NewLoanResponseModel, NewLoanRequestModel>
     {
 
         private readonly ILogger _logger;
-        private IValidator<LeasingLoanRequestModel> _leasingLoanValidator;
         private IValidator<NewLoanRequestModel> _newLoanValidator;
-        private IValidator<RefinancingLoanRequestModel> _refinancingLoanValidator;
 
 
-        public CalculatorService(ILogger logger,
-            IValidator<LeasingLoanRequestModel> leasingLoanValidator,
-            IValidator<NewLoanRequestModel> newLoanValidator,
-            IValidator<RefinancingLoanRequestModel> refinancingLoanValidator)
+        public NewLoanCalculatorService(ILogger logger,
+            IValidator<NewLoanRequestModel> newLoanValidator)
         {
-            _logger = logger.ForContext<CalculatorService>();
-            _leasingLoanValidator = leasingLoanValidator;
+            _logger = logger.ForContext<NewLoanCalculatorService>();
             _newLoanValidator = newLoanValidator;
-            _refinancingLoanValidator = refinancingLoanValidator;
         }
 
-        public NewLoanResponseModel CalculateNewLoan(NewLoanRequestModel requestModel)
+        public NewLoanResponseModel Calculate (NewLoanRequestModel requestModel)
         {
             var validated = _newLoanValidator.Validate(requestModel);
             if (!validated.IsValid)
@@ -78,151 +72,6 @@
                 _logger.Error($"An error occured while trying to calculate new loan.\nInput: {requestModel}\nMessage: {ex.Message}");
 
                 return new NewLoanResponseModel
-                {
-                    Status = HttpStatusCode.InternalServerError,
-                    ErrorMessage = "Something went wrong. Please contact our support team."
-                };
-            }
-        }
-
-        public RefinancingLoanResponseModel CalculateRefinancingLoan(RefinancingLoanRequestModel requestModel)
-        {
-            var validated = _refinancingLoanValidator.Validate(requestModel);
-            if (!validated.IsValid)
-            {
-                _logger.Error($"Refinancing Loan BadRequest! {validated}");
-
-                return new RefinancingLoanResponseModel
-                {
-                    Status = HttpStatusCode.BadRequest,
-                    ErrorMessage = validated.ToString()
-                };
-            }
-
-            try
-            {
-                var currentLoanCalculated = CalculateNewLoan(
-                    new NewLoanRequestModel
-                    {
-                        LoanAmount = requestModel.LoanAmount,
-                        Period = requestModel.Period,
-                        Interest = requestModel.Interest,
-                        InstallmentType = Installments.AnnuityInstallment
-                    });
-
-                var periodLeft = requestModel.Period - requestModel.CountOfPaidInstallments;
-                var monthlyInstallmentCurrentLoan = currentLoanCalculated.RepaymentPlan.First(x => x.Id == 1).MonthlyInstallment;
-
-                var moneyLeftToBePaid = requestModel.LoanAmount;
-
-                for (var i = 1; i <= requestModel.CountOfPaidInstallments; i++)
-                {
-                    moneyLeftToBePaid -= currentLoanCalculated.RepaymentPlan.First(x => x.Id == i).PrincipalInstallment;
-                }
-
-                var earlyInstallmentsFeeInCurrency = CalcHelpers.GetFeeCost(requestModel.EarlyInstallmentsFee, moneyLeftToBePaid);
-
-                var newLoanCalculated = CalculateNewLoan(
-                    new NewLoanRequestModel
-                    {
-                        LoanAmount = Math.Floor(moneyLeftToBePaid),
-                        Period = periodLeft,
-                        Interest = requestModel.NewInterest,
-                        InstallmentType = Installments.AnnuityInstallment,
-                        Fees = new List<FeeModel>
-                        {
-                            new FeeModel
-                            {
-                                Type = FeeType.StartingApplicationFee,
-                                Value = requestModel.StartingFeesCurrency,
-                                ValueType = FeeValueType.Currency
-                            },
-                            new FeeModel
-                            {
-                                Type = FeeType.OtherStartingFees,
-                                Value = requestModel.StartingFeesPercent,
-                                ValueType = FeeValueType.Percent
-                            }
-                        }
-                    });
-
-                var monthlyInstallmentNewLoan = newLoanCalculated.RepaymentPlan.First(x => x.Id == 1).MonthlyInstallment;
-                var totalCostNewLoan = periodLeft * monthlyInstallmentNewLoan + earlyInstallmentsFeeInCurrency
-                        + requestModel.StartingFeesCurrency + requestModel.StartingFeesPercent
-                        + CalcHelpers.GetFeeCost(requestModel.StartingFeesPercent, moneyLeftToBePaid);
-                return new RefinancingLoanResponseModel
-                {
-                    Status = HttpStatusCode.OK,
-                    CurrentLoan = new RefinancingLoanHelperModel
-                    {
-                        Interest = requestModel.Interest,
-                        Period = requestModel.Period,
-                        EarlyInstallmentsFee = earlyInstallmentsFeeInCurrency,
-                        MonthlyInstallment = monthlyInstallmentCurrentLoan,
-                        Total = periodLeft * monthlyInstallmentCurrentLoan
-                    },
-                    NewLoan = new RefinancingLoanHelperModel
-                    {
-                        Interest = requestModel.NewInterest,
-                        Period = periodLeft,
-                        MonthlyInstallment = monthlyInstallmentNewLoan,
-                        Total = totalCostNewLoan
-                    }
-                };
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"An error occured while trying to calculate new loan.\nInput: {requestModel}\nMessage: {ex.Message}");
-
-                return new RefinancingLoanResponseModel
-                {
-                    Status = HttpStatusCode.InternalServerError,
-                    ErrorMessage = "Something went wrong. Please contact our support team."
-                };
-            }
-        }
-
-        public LeasingLoanResponseModel CalculateLeasingLoan(LeasingLoanRequestModel requestModel)
-        {
-            var validated = _leasingLoanValidator.Validate(requestModel);
-            if (!validated.IsValid)
-            {
-                _logger.Error($"Leasing Loan BadRequest! {validated}");
-
-                return new LeasingLoanResponseModel
-                {
-                    Status = HttpStatusCode.BadRequest,
-                    ErrorMessage = validated.ToString()
-                };
-            }
-
-            //TO DO: AnnualPercentCost how to calculate ?
-            try
-            {
-                var totalFees = CalcHelpers.GetFeeCost(requestModel.StartingFee, requestModel.ProductPrice);
-                var totalCost = totalFees + requestModel.StartingInstallment + requestModel.Period * requestModel.MonthlyInstallment;
-
-                if (totalCost < requestModel.ProductPrice)
-                {
-                    return new LeasingLoanResponseModel
-                    {
-                        Status = HttpStatusCode.BadRequest,
-                        ErrorMessage = "You cannot have a leasing loan with these parameters."
-                    };
-                }
-                return new LeasingLoanResponseModel
-                {
-                    Status = HttpStatusCode.OK,
-                    //AnnualPercentCost
-                    TotalCost = totalCost,
-                    TotalFees = totalFees
-                };
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"An error occured while trying to calculate leasing loan.\nInput: {requestModel}\nMessage: {ex.Message}");
-
-                return new LeasingLoanResponseModel
                 {
                     Status = HttpStatusCode.InternalServerError,
                     ErrorMessage = "Something went wrong. Please contact our support team."

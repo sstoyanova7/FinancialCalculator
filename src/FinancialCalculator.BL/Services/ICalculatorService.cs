@@ -3,10 +3,8 @@
     using Models.RequestModels;
     using Models.ResponseModels;
 
-    public interface ICalculatorService
+    public interface ICalculatorService<T1, T2>
     {
-        NewLoanResponseModel CalculateNewLoan(NewLoanRequestModel requestModel);
-        RefinancingLoanResponseModel CalculateRefinancingLoan(RefinancingLoanRequestModel requestModel);
-        LeasingLoanResponseModel CalculateLeasingLoan(LeasingLoanRequestModel requestModel);
+        T1 Calculate(T2 requestModel);       
     }
 }

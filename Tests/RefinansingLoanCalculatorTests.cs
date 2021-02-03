@@ -9,139 +9,23 @@ namespace Tests
     using NUnit.Framework;
     using NUnit.Framework.Internal;
 
-    public class CalculatorTests
+    public class RefinansingLoanCalculatorTests
     {
-        private ICalculatorService _service;
-
+        private ICalculatorService<RefinancingLoanResponseModel, RefinancingLoanRequestModel> _service;
         private Mock<Serilog.ILogger> _logger;
-        private Mock<IValidator<LeasingLoanRequestModel>> _leasingLoanValidator;
-        private Mock<IValidator<NewLoanRequestModel>> _newLoanValidator;
         private Mock<IValidator<RefinancingLoanRequestModel>> _refinancingLoanValidator;
+        private Mock<IValidator<NewLoanRequestModel>> _newLoanValidator;
 
         [SetUp]
         public void Setup()
         {
             _logger = new Mock<Serilog.ILogger>();
-            _leasingLoanValidator = CreateValidatorGeneric<LeasingLoanRequestModel>();
-            _newLoanValidator = CreateValidatorGeneric<NewLoanRequestModel>();
-            _refinancingLoanValidator =  CreateValidatorGeneric<RefinancingLoanRequestModel>();
-            _service = new CalculatorService(_logger.Object, _leasingLoanValidator.Object, _newLoanValidator.Object, _refinancingLoanValidator.Object);
-        }
-
-        public Mock<IValidator<T>> CreateValidatorGeneric<T>()
-        {
-            var mock = new Mock<IValidator<T>>();
-
-            mock.Setup(l => l.Validate(It.IsAny<T>())).Returns(new ValidationResult());
-
-            return mock;
-        }
-
-        [Test]
-        public void LeasingLoanNoFees()
-        {
-            var requestModel = new LeasingLoanRequestModel
-            {
-                ProductPrice = 200,
-                StartingInstallment = 10,
-                Period = 25,
-                MonthlyInstallment = 10
-            };
-            var actual = _service.CalculateLeasingLoan(requestModel);
-
-            var expected = new LeasingLoanResponseModel
-            {
-                Status = System.Net.HttpStatusCode.OK,
-                //AnnualPercentCost = 30.34,
-                AnnualPercentCost = 0,
-                TotalCost = 260,
-                TotalFees = 0
-            };
-
-            Assert.AreEqual(actual, expected);
-        }
-
-        [Test]
-        public void LeasingLoanFeeCurrency()
-        {
-            var requestModel = new LeasingLoanRequestModel
-            {
-                ProductPrice = 200,
-                StartingInstallment = 10,
-                Period = 25,
-                MonthlyInstallment = 10,
-                StartingFee = new FeeModel
-                {
-                    Type = FeeType.StartingProcessingFee,
-                    ValueType = FeeValueType.Currency,
-                    Value = 2
-                }
-            };
-            var actual = _service.CalculateLeasingLoan(requestModel);
-
-            var expected = new LeasingLoanResponseModel
-            {
-                Status = System.Net.HttpStatusCode.OK,
-                //AnnualPercentCost = 31.75,
-                AnnualPercentCost = 0,
-                TotalCost = 262,
-                TotalFees = 2
-            };
-
-            Assert.AreEqual(actual, expected);
-        }
-
-
-        [Test]
-        public void LeasingLoanFeePercent()
-        {
-            var requestModel = new LeasingLoanRequestModel
-            {
-                ProductPrice = 200,
-                StartingInstallment = 10,
-                Period = 25,
-                MonthlyInstallment = 10,
-                StartingFee = new FeeModel
-                {
-                    Type = FeeType.StartingProcessingFee,
-                    ValueType = FeeValueType.Percent,
-                    Value = 2
-                }
-            };
-            var actual = _service.CalculateLeasingLoan(requestModel);
-
-            var expected = new LeasingLoanResponseModel
-            {
-                Status = System.Net.HttpStatusCode.OK,
-                //AnnualPercentCost = 33.19,
-                AnnualPercentCost = 0,
-                TotalCost = 264,
-                TotalFees = 4
-            };
-
-            Assert.AreEqual(actual, expected);
-        }
-        
-        [Test]
-        public void InvalidLeasingLoan()
-        {
-            var requestModel = new LeasingLoanRequestModel
-            {
-                ProductPrice = 200,
-                StartingInstallment = 1,
-                Period = 25,
-                MonthlyInstallment = 1,
-            };
-            var actual = _service.CalculateLeasingLoan(requestModel);
-
-            var expected = new LeasingLoanResponseModel
-            {
-                Status = System.Net.HttpStatusCode.BadRequest,
-                ErrorMessage = "You cannot have a leasing loan with these parameters."
-            };
-
-            Assert.AreEqual(actual, expected);
-        }
+            _refinancingLoanValidator = SetupHelper.CreateValidatorGeneric<RefinancingLoanRequestModel>();
+            _newLoanValidator = SetupHelper.CreateValidatorGeneric<NewLoanRequestModel>();
+            var _newLoanService = new NewLoanCalculatorService(_logger.Object, _newLoanValidator.Object);
+            
+            _service = new RefinancingLoanCalculatorService(_logger.Object, _refinancingLoanValidator.Object, _newLoanService);
+        }       
 
         [Test]
         public void RefinancingLoanNoFees()
@@ -157,7 +41,7 @@ namespace Tests
                 StartingFeesCurrency = 0,
                 StartingFeesPercent = 0
             };
-            var actual = _service.CalculateRefinancingLoan(requestModel);
+            var actual = _service.Calculate(requestModel);
 
             var expected = new RefinancingLoanResponseModel
             {
@@ -201,7 +85,7 @@ namespace Tests
                 StartingFeesCurrency = 0,
                 StartingFeesPercent = 0
             };
-            var actual = _service.CalculateRefinancingLoan(requestModel);
+            var actual = _service.Calculate(requestModel);
 
             var expected = new RefinancingLoanResponseModel
             {
@@ -245,7 +129,7 @@ namespace Tests
                 StartingFeesCurrency = 2,
                 StartingFeesPercent = 2
             };
-            var actual = _service.CalculateRefinancingLoan(requestModel);
+            var actual = _service.Calculate(requestModel);
 
             var expected = new RefinancingLoanResponseModel
             {
