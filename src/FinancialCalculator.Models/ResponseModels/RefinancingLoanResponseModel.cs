@@ -17,8 +17,8 @@
                 return false;
             return Status == b.Status
                 && ErrorMessage == b.ErrorMessage
-                && CurrentLoan == b.CurrentLoan
-                && NewLoan == b.NewLoan
+                && CurrentLoan.Equals(b.CurrentLoan)
+                && NewLoan.Equals(b.NewLoan)
                 && MonthlySavings == b.MonthlySavings
                 && TotalSavings == b.TotalSavings;
         }

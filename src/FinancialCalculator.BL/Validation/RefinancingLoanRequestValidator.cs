@@ -24,9 +24,9 @@
                 validated.AddError("Period must be more than 1 month.");
             }
 
-            if(request.Interest < 0 || request.Interest > 100)
+            if(request.Interest <= 0 || request.Interest >= 100)
             {
-                validated.AddError("Interest must be between 0 and 100.");
+                validated.AddError("Interest must be greater than 0 and less than 100.");
             }
 
             if(request.CountOfPaidInstallments < 0)
@@ -34,9 +34,9 @@
                 validated.AddError("Count of paid installments cannot be less than zero.");
             }
 
-            if (request.CountOfPaidInstallments > request.Period)
+            if (request.CountOfPaidInstallments >= request.Period)
             {
-                validated.AddError("Count of paid installments cannot be greater than the period.");
+                validated.AddError("Count of paid installments must be less than the whole period.");
             }
 
             if(request.EarlyInstallmentsFee < 0 || request.EarlyInstallmentsFee > 100)
@@ -44,9 +44,9 @@
                 validated.AddError("Early installments fee must be between 0 and 100.");
             }
 
-            if(request.NewInterest < 0 || request.NewInterest > 100)
+            if(request.NewInterest <= 0 || request.NewInterest >= 100)
             {
-                validated.AddError("New interest must be between 0 and 100.");
+                validated.AddError("New interest must be greater than 0 and less than 100.");
             }
 
             if(request.StartingFeesCurrency < 0)

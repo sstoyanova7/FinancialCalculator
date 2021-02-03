@@ -58,7 +58,7 @@ namespace Tests
                 TotalFees = 0
             };
 
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.AreEqual(actual, expected);
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Tests
                 TotalFees = 2
             };
 
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.AreEqual(actual, expected);
         }
 
 
@@ -119,7 +119,7 @@ namespace Tests
                 TotalFees = 4
             };
 
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.AreEqual(actual, expected);
         }
         
         [Test]
@@ -140,10 +140,51 @@ namespace Tests
                 ErrorMessage = "You cannot have a leasing loan with these parameters."
             };
 
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.AreEqual(actual, expected);
         }
 
+        [Test]
+        public void RefinancingLoanNoFees()
+        {
+            var requestModel = new RefinancingLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Interest = 10,
+                Period = 12,
+                CountOfPaidInstallments = 2,
+                EarlyInstallmentsFee = 0,
+                NewInterest = 2,
+                StartingFeesCurrency = 0,
+                StartingFeesPercent = 0
+            };
+            var actual = _service.CalculateRefinancingLoan(requestModel);
 
+            var expected = new RefinancingLoanResponseModel
+            {
+                Status = System.Net.HttpStatusCode.OK,
+                CurrentLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 10,
+                    Period = 12,
+                    EarlyInstallmentsFee = 0,
+                    MonthlyInstallment = 87.92M,
+                    //Total = 879.16M
+                    Total = 879.20M
+
+                },
+                NewLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 2,
+                    Period = 10,
+                    EarlyInstallmentsFee = 0,
+                    //MonthlyInstallment = 84.79M,
+                    MonthlyInstallment = 84.77M,
+                    Total = 847.70M
+                }
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
 
     }
 }

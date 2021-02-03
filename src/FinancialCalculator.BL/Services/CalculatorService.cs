@@ -112,7 +112,14 @@
 
                 var periodLeft = requestModel.Period - requestModel.CountOfPaidInstallments;
                 var monthlyInstallmentCurrentLoan = currentLoanCalculated.RepaymentPlan.First(x => x.Id == 1).MonthlyInstallment;
-                var moneyLeftToBePaid = periodLeft * monthlyInstallmentCurrentLoan;
+
+                var moneyLeftToBePaid = requestModel.LoanAmount;
+
+                for (var i = 1; i <= requestModel.CountOfPaidInstallments; i++)
+                {
+                    moneyLeftToBePaid -= currentLoanCalculated.RepaymentPlan.First(x => x.Id == i).PrincipalInstallment;
+                }
+
                 var earlyInstallmentsFeeInCurrency = CalcHelpers.GetFeeCost(requestModel.EarlyInstallmentsFee, moneyLeftToBePaid);
 
                 var newLoanCalculated = CalculateNewLoan(
@@ -150,7 +157,7 @@
                         Period = requestModel.Period,
                         EarlyInstallmentsFee = earlyInstallmentsFeeInCurrency,
                         MonthlyInstallment = monthlyInstallmentCurrentLoan,
-                        Total = moneyLeftToBePaid
+                        Total = periodLeft * monthlyInstallmentCurrentLoan
                     },
                     NewLoan = new RefinancingLoanHelperModel
                     {

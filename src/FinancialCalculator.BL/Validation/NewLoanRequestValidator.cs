@@ -33,9 +33,9 @@
                 validated.AddError("Period must be more than 1 month.");
             }
 
-            if (request.Interest < 0 || request.Interest > 100)
+            if (request.Interest <= 0 || request.Interest >= 100)
             {
-                validated.AddError("Interest must be between 0 and 100.");
+                validated.AddError("Interest must be greater than 0 and less than 100.");
             }
 
             var installments = Enum.GetValues(typeof(Installments));
@@ -59,14 +59,14 @@
                 validated.AddError("Promo period must be less than the whole period.");
             }
 
-            if (request.PromoInterest < 0)
+            if (request.PromoInterest <= 0)
             {
-                validated.AddError("Promo interest cannot be less than 0.");
+                validated.AddError("Promo interest must be greater than 0.");
             }
 
-            if (request.PromoInterest > request.Interest)
+            if (request.PromoInterest >= request.Interest)
             {
-                validated.AddError("Promo interest cannot be lhigher than original interest");
+                validated.AddError("Promo interest must be less than the original interest");
             }
 
             if (request.GracePeriod < 0)
