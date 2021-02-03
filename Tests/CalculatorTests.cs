@@ -9,7 +9,7 @@ namespace Tests
     using NUnit.Framework;
     using NUnit.Framework.Internal;
 
-    public class Tests
+    public class CalculatorTests
     {
         private ICalculatorService _service;
 
@@ -35,19 +35,41 @@ namespace Tests
             mock.Setup(l => l.Validate(It.IsAny<T>())).Returns(new ValidationResult());
 
             return mock;
-        } 
-            
-
+        }
 
         [Test]
-        public void Test1()
+        public void LeasingLoanNoFees()
         {
             var requestModel = new LeasingLoanRequestModel
             {
-                ProductPrice = 1000,
-                StartingInstallment = 100,
-                Period = 12,
-                MonthlyInstallment = 100,
+                ProductPrice = 200,
+                StartingInstallment = 10,
+                Period = 25,
+                MonthlyInstallment = 10
+            };
+            var actual = _service.CalculateLeasingLoan(requestModel);
+
+            var expected = new LeasingLoanResponseModel
+            {
+                Status = System.Net.HttpStatusCode.OK,
+                //AnnualPercentCost = 30.34,
+                AnnualPercentCost = 0,
+                TotalCost = 260,
+                TotalFees = 0
+            };
+
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void LeasingLoanFeeCurrency()
+        {
+            var requestModel = new LeasingLoanRequestModel
+            {
+                ProductPrice = 200,
+                StartingInstallment = 10,
+                Period = 25,
+                MonthlyInstallment = 10,
                 StartingFee = new FeeModel
                 {
                     Type = FeeType.StartingProcessingFee,
@@ -60,9 +82,41 @@ namespace Tests
             var expected = new LeasingLoanResponseModel
             {
                 Status = System.Net.HttpStatusCode.OK,
+                //AnnualPercentCost = 31.75,
                 AnnualPercentCost = 0,
-                TotalCost = 1302,
+                TotalCost = 262,
                 TotalFees = 2
+            };
+
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+
+        [Test]
+        public void LeasingLoanFeePercent()
+        {
+            var requestModel = new LeasingLoanRequestModel
+            {
+                ProductPrice = 200,
+                StartingInstallment = 10,
+                Period = 25,
+                MonthlyInstallment = 10,
+                StartingFee = new FeeModel
+                {
+                    Type = FeeType.StartingProcessingFee,
+                    ValueType = FeeValueType.Percent,
+                    Value = 2
+                }
+            };
+            var actual = _service.CalculateLeasingLoan(requestModel);
+
+            var expected = new LeasingLoanResponseModel
+            {
+                Status = System.Net.HttpStatusCode.OK,
+                //AnnualPercentCost = 33.19,
+                AnnualPercentCost = 0,
+                TotalCost = 264,
+                TotalFees = 4
             };
 
             Assert.That(actual, Is.EqualTo(expected));
