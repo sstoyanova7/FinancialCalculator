@@ -147,7 +147,9 @@
                     });
 
                 var monthlyInstallmentNewLoan = newLoanCalculated.RepaymentPlan.First(x => x.Id == 1).MonthlyInstallment;
-
+                var totalCostNewLoan = periodLeft * monthlyInstallmentNewLoan + earlyInstallmentsFeeInCurrency
+                        + requestModel.StartingFeesCurrency + requestModel.StartingFeesPercent
+                        + CalcHelpers.GetFeeCost(requestModel.StartingFeesPercent, moneyLeftToBePaid);
                 return new RefinancingLoanResponseModel
                 {
                     Status = HttpStatusCode.OK,
@@ -164,7 +166,7 @@
                         Interest = requestModel.NewInterest,
                         Period = periodLeft,
                         MonthlyInstallment = monthlyInstallmentNewLoan,
-                        Total = periodLeft * monthlyInstallmentNewLoan + earlyInstallmentsFeeInCurrency
+                        Total = totalCostNewLoan
                     }
                 };
             }
