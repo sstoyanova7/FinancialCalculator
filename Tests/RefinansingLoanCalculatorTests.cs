@@ -9,7 +9,7 @@ namespace Tests
     using NUnit.Framework;
     using NUnit.Framework.Internal;
 
-    public class RefinansingLoanCalculatorTests
+    public class RefinancingLoanCalculatorTests
     {
         private ICalculatorService<RefinancingLoanResponseModel, RefinancingLoanRequestModel> _service;
         private Mock<Serilog.ILogger> _logger;
@@ -28,7 +28,7 @@ namespace Tests
         }       
 
         [Test]
-        public void RefinancingLoanNoFees()
+        public void RefinancingLoanWithNoFees()
         {
             var requestModel = new RefinancingLoanRequestModel
             {
@@ -116,7 +116,93 @@ namespace Tests
         }
 
         [Test]
-        public void RefinancingLoanWithStartingFees()
+        public void RefinancingLoanWithStartingFeeCurrency()
+        {
+            var requestModel = new RefinancingLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Interest = 10,
+                Period = 12,
+                CountOfPaidInstallments = 2,
+                EarlyInstallmentsFee = 0,
+                NewInterest = 2,
+                StartingFeesCurrency = 2,
+                StartingFeesPercent = 0
+            };
+            var actual = _service.Calculate(requestModel);
+
+            var expected = new RefinancingLoanResponseModel
+            {
+                Status = System.Net.HttpStatusCode.OK,
+                CurrentLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 10,
+                    Period = 12,
+                    EarlyInstallmentsFee = 0,
+                    MonthlyInstallment = 87.92M,
+                    //Total = 879.16M
+                    Total = 879.20M
+                },
+                NewLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 2,
+                    Period = 10,
+                    EarlyInstallmentsFee = 0,
+                    //MonthlyInstallment = 84.79M,
+                    MonthlyInstallment = 84.77M,
+                    //Total = 849.89M
+                    Total = 849.70M
+                }
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
+
+        [Test]
+        public void RefinancingLoanWithStartingFeePercent()
+        {
+            var requestModel = new RefinancingLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Interest = 10,
+                Period = 12,
+                CountOfPaidInstallments = 2,
+                EarlyInstallmentsFee = 0,
+                NewInterest = 2,
+                StartingFeesCurrency = 0,
+                StartingFeesPercent = 2
+            };
+            var actual = _service.Calculate(requestModel);
+
+            var expected = new RefinancingLoanResponseModel
+            {
+                Status = System.Net.HttpStatusCode.OK,
+                CurrentLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 10,
+                    Period = 12,
+                    EarlyInstallmentsFee = 0,
+                    MonthlyInstallment = 87.92M,
+                    //Total = 879.16M
+                    Total = 879.20M
+                },
+                NewLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 2,
+                    Period = 10,
+                    EarlyInstallmentsFee = 0,
+                    //MonthlyInstallment = 84.79M,
+                    MonthlyInstallment = 84.77M,
+                    //Total = 867.89M
+                    Total = 866.50M
+                }
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
+
+        [Test]
+        public void RefinancingLoanWithBothStartingFees()
         {
             var requestModel = new RefinancingLoanRequestModel
             {
@@ -152,6 +238,135 @@ namespace Tests
                     MonthlyInstallment = 84.77M,
                     //Total = 869.89M
                     Total = 868.50M
+                }
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
+
+        [Test]
+        public void RefinancingLoanWithEarlyInstallmentsFeeAndStartingFeeCurrency()
+        {
+            var requestModel = new RefinancingLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Interest = 10,
+                Period = 12,
+                CountOfPaidInstallments = 2,
+                EarlyInstallmentsFee = 2,
+                NewInterest = 2,
+                StartingFeesCurrency = 2,
+                StartingFeesPercent = 0
+            };
+            var actual = _service.Calculate(requestModel);
+
+            var expected = new RefinancingLoanResponseModel
+            {
+                Status = System.Net.HttpStatusCode.OK,
+                CurrentLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 10,
+                    Period = 12,
+                    EarlyInstallmentsFee = 16.80M,
+                    MonthlyInstallment = 87.92M,
+                    //Total = 879.16M
+                    Total = 879.20M
+                },
+                NewLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 2,
+                    Period = 10,
+                    EarlyInstallmentsFee = 0,
+                    //MonthlyInstallment = 84.79M,
+                    MonthlyInstallment = 84.77M,
+                    //Total = 866.70M
+                    Total = 866.50M
+                }
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
+
+        [Test]
+        public void RefinancingLoanWithEarlyInstallmentsFeeAndStartingFeePercent()
+        {
+            var requestModel = new RefinancingLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Interest = 10,
+                Period = 12,
+                CountOfPaidInstallments = 2,
+                EarlyInstallmentsFee = 2,
+                NewInterest = 2,
+                StartingFeesCurrency = 0,
+                StartingFeesPercent = 2
+            };
+            var actual = _service.Calculate(requestModel);
+
+            var expected = new RefinancingLoanResponseModel
+            {
+                Status = System.Net.HttpStatusCode.OK,
+                CurrentLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 10,
+                    Period = 12,
+                    EarlyInstallmentsFee = 16.80M,
+                    MonthlyInstallment = 87.92M,
+                    //Total = 879.16M
+                    Total = 879.20M
+                },
+                NewLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 2,
+                    Period = 10,
+                    EarlyInstallmentsFee = 0,
+                    //MonthlyInstallment = 84.79M,
+                    MonthlyInstallment = 84.77M,
+                    //Total = 884.70M
+                    Total = 883.30M
+                }
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
+
+        [Test]
+        public void RefinancingLoanWithAllFees()
+        {
+            var requestModel = new RefinancingLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Interest = 10,
+                Period = 12,
+                CountOfPaidInstallments = 2,
+                EarlyInstallmentsFee = 2,
+                NewInterest = 2,
+                StartingFeesCurrency = 2,
+                StartingFeesPercent = 2
+            };
+            var actual = _service.Calculate(requestModel);
+
+            var expected = new RefinancingLoanResponseModel
+            {
+                Status = System.Net.HttpStatusCode.OK,
+                CurrentLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 10,
+                    Period = 12,
+                    EarlyInstallmentsFee = 16.80M,
+                    MonthlyInstallment = 87.92M,
+                    //Total = 879.16M
+                    Total = 879.20M
+                },
+                NewLoan = new RefinancingLoanHelperModel
+                {
+                    Interest = 2,
+                    Period = 10,
+                    EarlyInstallmentsFee = 0,
+                    //MonthlyInstallment = 84.79M,
+                    MonthlyInstallment = 84.77M,
+                    //Total = 886.70M
+                    Total = 885.30M
                 }
             };
 

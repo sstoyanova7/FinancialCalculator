@@ -92,6 +92,7 @@
                 var totalCostNewLoan = periodLeft * monthlyInstallmentNewLoan + earlyInstallmentsFeeInCurrency
                         + requestModel.StartingFeesCurrency + requestModel.StartingFeesPercent
                         + CalcHelpers.GetFeeCost(requestModel.StartingFeesPercent, moneyLeftToBePaid);
+
                 return new RefinancingLoanResponseModel
                 {
                     Status = HttpStatusCode.OK,
