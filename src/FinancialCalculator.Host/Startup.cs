@@ -28,7 +28,7 @@ namespace FinancialCalculatorFE
             services.AddSingleton<ICalculatorService, CalculatorService>();
             services.AddSingleton<IValidator<FeeModel>, FeeValidator>();
             services.AddSingleton<IValidator<NewLoanRequestModel>, NewLoanRequestValidator>();
-            services.AddSingleton<IValidator<RefinancingLoanRequestModel>, RefinancingLoanValidator>();
+            services.AddSingleton<IValidator<RefinancingLoanRequestModel>, RefinancingLoanRequestValidator>();
             services.AddSingleton<IValidator<LeasingLoanRequestModel>, LeasingLoanRequestValidator>();
         }
 

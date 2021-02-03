@@ -121,5 +121,29 @@ namespace Tests
 
             Assert.That(actual, Is.EqualTo(expected));
         }
+        
+        [Test]
+        public void InvalidLeasingLoan()
+        {
+            var requestModel = new LeasingLoanRequestModel
+            {
+                ProductPrice = 200,
+                StartingInstallment = 1,
+                Period = 25,
+                MonthlyInstallment = 1,
+            };
+            var actual = _service.CalculateLeasingLoan(requestModel);
+
+            var expected = new LeasingLoanResponseModel
+            {
+                Status = System.Net.HttpStatusCode.BadRequest,
+                ErrorMessage = "You cannot have a leasing loan with these parameters."
+            };
+
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+
+
     }
 }

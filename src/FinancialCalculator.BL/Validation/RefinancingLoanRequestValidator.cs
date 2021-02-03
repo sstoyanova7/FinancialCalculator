@@ -2,7 +2,7 @@
 {
     using FinancialCalculator.Models.RequestModels;
 
-    public class RefinancingLoanValidator : IValidator<RefinancingLoanRequestModel>
+    public class RefinancingLoanRequestValidator : IValidator<RefinancingLoanRequestModel>
     {     
         public ValidationResult Validate(RefinancingLoanRequestModel request)
         {

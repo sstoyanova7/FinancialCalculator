@@ -193,7 +193,14 @@
                 var totalFees = CalcHelpers.GetFeeCost(requestModel.StartingFee, requestModel.ProductPrice);
                 var totalCost = totalFees + requestModel.StartingInstallment + requestModel.Period * requestModel.MonthlyInstallment;
 
-
+                if (totalCost < requestModel.ProductPrice)
+                {
+                    return new LeasingLoanResponseModel
+                    {
+                        Status = HttpStatusCode.BadRequest,
+                        ErrorMessage = "You cannot have a leasing loan with these parameters."
+                    };
+                }
                 return new LeasingLoanResponseModel
                 {
                     Status = HttpStatusCode.OK,
