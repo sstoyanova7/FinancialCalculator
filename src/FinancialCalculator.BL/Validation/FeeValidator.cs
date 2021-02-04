@@ -13,7 +13,6 @@
 
             if (fee == null)
             {
-                validated.AddError("Fee cannot be null.");
                 return validated;
             }
 

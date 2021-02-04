@@ -59,7 +59,8 @@
                 return new NewLoanResponseModel
                 {
                     Status = HttpStatusCode.OK,
-                    AnnualPercentCost = CalcHelpers.CalculateAPR(totalFeesCost, totalInterestCost, requestModel.LoanAmount, requestModel.Period),
+                    //AnnualPercentCost = CalcHelpers.CalculateAPR(totalFeesCost, totalInterestCost, requestModel.LoanAmount, requestModel.Period),
+                    AnnualPercentCost = 0,
                     TotalCost = totalMonthlyInstallmentsCost + totalFeesCost,
                     FeesCost = totalFeesCost,
                     InterestsCost = totalInterestCost,
@@ -123,8 +124,6 @@
             }
 
             return installments.Select(x => x.Value);
-
-            throw new NotImplementedException();
         }
 
         private IEnumerable<InstallmentForRepaymentPlanModel> GetAnuityPlan(NewLoanRequestModel requestModel)
