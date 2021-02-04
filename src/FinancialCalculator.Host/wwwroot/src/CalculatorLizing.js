@@ -11,12 +11,14 @@ import "@ui5/webcomponents/dist/TableColumn.js";
 import "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents/dist/TableCell.js";
 import "@ui5/webcomponents/dist/Title";
+import axios from 'axios';
 import Notes from './Notes';
 
 class CalculatorLizing extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            userAgent: "",
             productPrice: "",
             startingInstallment: "",
             leasePeriod: "",
@@ -30,7 +32,6 @@ class CalculatorLizing extends React.Component {
                 TotalFees: ""
             }
         }
-
         this.calculateLeasingButtonRef = React.createRef();
     }
 
@@ -53,70 +54,58 @@ class CalculatorLizing extends React.Component {
     //Функция за добавяне на грешките в input ите
 
     onCalculateLeasing = (event) => {
-        // if ВАЛИДАЦИЯ НА STATE
-        //AXIOS GET;
-        // handleSubmit = (event) => {
+        // if validation === true => post/get 
+        const userAgent = navigator.userAgent;
+        let postInformation = {}
+        if (!this.state.startingFee) {
+             postInformation = {
+                'UserAgent': userAgent,
+                'ProductPrice': parseFloat(this.state.productPrice),
+                'StartingInstallment': parseFloat(this.state.startingInstallment),
+                'Period': parseFloat(this.state.leasePeriod),
+                'MonthlyInstallment': parseFloat(this.state.monthlyInstallment),
+            }
+        } else {
+            postInformation = {
+                'UserAgent': userAgent,
+                'ProductPrice': parseFloat(this.state.productPrice),
+                'StartingInstallment': parseFloat(this.state.startingInstallment),
+                'Period': parseFloat(this.state.leasePeriod),
+                'MonthlyInstallment': parseFloat(this.state.monthlyInstallment),
+                'StartingFee': {
+                    'Type': 1,
+                    'Value': parseFloat(this.state.startingFee),
+                    'ValueType': 1
+                }
+            }
+        }
+     
+        axios({
+            method: 'post',
+            url: '/FinancialCalculator/api/calculateLeasingLoan',
+            data: {
+                ...postInformation
+            }
+        }).then(res => {
+           
+            this.setState({
+                calculated: true,
+                ...{
+                    result: {
+                        anualPercentExpense: res.data['annualPercentCost'],
+                        totalPaidWithFees: res.data['totalCost'],
+                        TotalFees: res.data['totalFees']
+                    }
+                }
+            })
+        }).then(err => {
+            console.log(err);
+        })
 
-        //     event.preventDefault();
-    
-        //     const errors = validate(event);
-    
-        //     if (errors.length > 0) {
-        //         this.setState({ errors, isVisible: '' })
-        //     } else {
-        //         this.setState({ isVisible: 'none' })
-        //         const information = {
-        //             'UserAgent': "Mozilla",
-        //             'ProductPrice': parseFloat(this.state.ProductPrice),
-        //             'StartingInstallment': parseFloat(this.state.StartingInstallment),
-        //             'Period': parseFloat(this.state.Period),
-        //             'MonthlyInstallment': parseFloat(this.state.MonthlyInstallment),
-        //             'StartingFee': {
-        //                 'Type': 1,
-        //                 'Value': parseFloat(this.state.StartingFeeValue),
-        //                 'ValueType': this.state.StartingFeeValueType
-        //             }
-        //         }
-        //         axios({
-        //             method: 'post',
-        //             url: '/FinancialCalculator/api/calculateLeasingLoan',
-        //             data: {
-        //                 ...information
-        //             }
-        //         }).then(res => {
-    
-        //             console.log(res.data)
-        //             this.setState({
-        //                 ...{
-        //                     responseInformation: {
-        //                         statusCodeTest: res.statusText,
-        //                         statusCode: res.data['status'],
-        //                         anualPercentExpense: res.data['annualPercentCost'],
-        //                         totalCost: res.data['totalCost'],
-        //                         totalFees: res.data['totalFees']
-        //                     }
-        //                 }
-        //             })
-    
-        //         }).catch(err => { console.log(err) })
-        //     }
-        //     console.log(errors)
-    
-    
-        //     //if (!canSubmit(event) && !isEmpty(event)) {
-    
-    
-        //     //} else {
-        //     //    console.log('err')
-        //     //}
-        // }
-    
-    
         this.setState({
-            calculated: true
+            calculated: false
             //result = response;
         });
-
     }
 
     addEventListeners() {
