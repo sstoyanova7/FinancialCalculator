@@ -11,7 +11,20 @@
         public decimal InterestInstallment { get; set; }
         public decimal PrincipalBalance { get; set; }
         public decimal Fees { get; set; }
-        public decimal CashFlow { get; set; } // ??
+        public decimal CashFlow { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is InstallmentForRepaymentPlanModel b))
+                return false;
+            return Id == b.Id
+                && Date == b.Date
+                && MonthlyInstallment == b.MonthlyInstallment
+                && PrincipalInstallment == b.PrincipalInstallment
+                && InterestInstallment == b.InterestInstallment
+                && PrincipalBalance == b.PrincipalBalance
+                && Fees == b.Fees
+                && CashFlow == b.CashFlow;
+        }
     }
 }

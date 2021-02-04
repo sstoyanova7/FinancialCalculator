@@ -4,6 +4,9 @@ namespace FinancialCalculatorFE
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using FinancialCalculator.BL.Validation;
+    using FinancialCalculator.Models.RequestModels;
+    using FinancialCalculator.Models.ResponseModels;
     using FinancialCalculator.Services;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -23,7 +26,13 @@ namespace FinancialCalculatorFE
             services.AddControllersWithViews();
             services.AddSwaggerGen();
             services.AddSingleton<ILogger>(new LoggerConfiguration().WriteTo.Console().MinimumLevel.Debug().CreateLogger());
-            services.AddSingleton<ICalculatorService, CalculatorService>();
+            services.AddSingleton<ICalculatorService<NewLoanResponseModel, NewLoanRequestModel>, NewLoanCalculatorService>();
+            services.AddSingleton<ICalculatorService<RefinancingLoanResponseModel, RefinancingLoanRequestModel>, RefinancingLoanCalculatorService>();
+            services.AddSingleton<ICalculatorService<LeasingLoanResponseModel, LeasingLoanRequestModel>, LeasingLoanCalculatorService>();
+            services.AddSingleton<IValidator<FeeModel>, FeeValidator>();
+            services.AddSingleton<IValidator<NewLoanRequestModel>, NewLoanRequestValidator>();
+            services.AddSingleton<IValidator<RefinancingLoanRequestModel>, RefinancingLoanRequestValidator>();
+            services.AddSingleton<IValidator<LeasingLoanRequestModel>, LeasingLoanRequestValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
