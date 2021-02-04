@@ -39,7 +39,7 @@
                 var errorString = $"{fee.Type} value type should be one of the following:";
                 foreach (var i in feeValueTypes)
                 {
-                    errorString += $"i({Enum.GetName(typeof(FeeValueType), i)})";
+                    errorString += $"{i}({Enum.GetName(typeof(FeeValueType), i)}) ";
                 }
                 validated.AddError(errorString);
             }

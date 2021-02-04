@@ -32,7 +32,7 @@
 
             if (request.Period < 1)
             {
-                validated.AddError("Period must be more than 1 month.");
+                validated.AddError("Period must be at least 1 month.");
             }
 
             if (request.MonthlyInstallment <= 0)
