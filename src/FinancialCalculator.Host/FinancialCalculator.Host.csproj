@@ -5,25 +5,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\src\axios\**" />
+    <Compile Remove="wwwroot\src\components\**" />
+    <Compile Remove="wwwroot\src\exceptions\**" />
+    <Compile Remove="wwwroot\src\pages\**" />
+    <Content Remove="wwwroot\src\axios\**" />
+    <Content Remove="wwwroot\src\components\**" />
+    <Content Remove="wwwroot\src\exceptions\**" />
+    <Content Remove="wwwroot\src\pages\**" />
+    <EmbeddedResource Remove="wwwroot\src\axios\**" />
+    <EmbeddedResource Remove="wwwroot\src\components\**" />
+    <EmbeddedResource Remove="wwwroot\src\exceptions\**" />
+    <EmbeddedResource Remove="wwwroot\src\pages\**" />
+    <None Remove="wwwroot\src\axios\**" />
+    <None Remove="wwwroot\src\components\**" />
+    <None Remove="wwwroot\src\exceptions\**" />
+    <None Remove="wwwroot\src\pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\src\App.js" />
-    <None Include="wwwroot\src\axios\axios.js" />
-    <None Include="wwwroot\src\components\LeasingCalculator\LeasingCalculator.css" />
-    <None Include="wwwroot\src\components\LeasingCalculator\LeasingCalculator.js" />
-    <None Include="wwwroot\src\components\LoginComponent\LoginForm\LoginForm.css" />
-    <None Include="wwwroot\src\components\LoginComponent\LoginForm\LoginForm.js" />
-    <None Include="wwwroot\src\components\RegisterComponent\RegisterForm.css" />
-    <None Include="wwwroot\src\components\RegisterComponent\RegisterForm.js" />
-    <None Include="wwwroot\src\components\WelcomePageComponent\NavBar\Navbar.css" />
-    <None Include="wwwroot\src\components\WelcomePageComponent\NavBar\Navbar.js" />
-    <None Include="wwwroot\src\components\WelcomePageComponent\Showcase\Showcase.css" />
-    <None Include="wwwroot\src\components\WelcomePageComponent\Showcase\Showcase.js" />
-    <None Include="wwwroot\src\exceptions\validations.js" />
     <None Include="wwwroot\src\index.js" />
-    <None Include="wwwroot\src\pages\LeasingCalculator.jsx" />
-    <None Include="wwwroot\src\pages\LoginPage.jsx" />
-    <None Include="wwwroot\src\pages\RegisterPage.jsx" />
-    <None Include="wwwroot\src\pages\WelcomePage.jsx" />
-    <None Include="wwwroot\src\TODO" />
   </ItemGroup>
 
   <ItemGroup>

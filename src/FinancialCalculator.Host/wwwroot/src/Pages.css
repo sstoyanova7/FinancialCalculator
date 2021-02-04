@@ -1,0 +1,100 @@
+.page {
+    float: left;
+    display: inline;
+    max-width:55rem;
+    padding-left: 2.5rem;
+    padding-top: 2.5rem;
+}
+
+.sub-page {
+    padding-bottom: 4rem;
+}
+
+.list-items{
+    margin: auto;
+    width: 400px;
+}
+
+.input-button {
+    display:flex;
+    width:100%;
+    justify-content:flex-end;
+}
+
+.calculator-input-row {
+    display: flex;
+    margin-top: 0.5rem;
+    
+}
+.calculator-input-pair {
+    display: inline;
+    float: left;
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.calculator-calculation-end {
+    display: inline;
+    margin: auto;
+}
+
+.calculator-calculation-credit-end {
+    display: inline;
+    margin: auto;
+    padding-bottom: 1rem;
+    margin-left: 4rem;
+}
+
+.calculator-end-row {
+    padding-bottom: 1rem;
+}
+
+.lease-info {
+    text-align:center;
+}
+
+.account-form {
+    width: 25%;
+    float:left; 
+    display:inline; 
+    margin-left: 2rem;
+    margin-right: 5rem;
+}
+
+.account-input {
+    display: flex;
+    padding-top: 1.5rem;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.text-input{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.2rem;
+}
+
+.account-button-actions {
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+    display: flex;
+    padding-left: 70%;
+}
+
+.info {
+    max-width: 20%;
+}
+
+.starting-fees  {
+    display:flex;
+}
+
+.annual-fees {
+    display: flex;
+}
+
+.monthly-fees {
+    display: flex;
+}

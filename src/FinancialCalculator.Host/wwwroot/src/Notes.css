@@ -1,0 +1,20 @@
+.notes {
+    max-width:40rem;
+    display: inline;
+    float: left;
+    padding-left: 2.5rem;
+    
+    
+}
+
+.note {
+    margin: auto;
+    margin-top: 2rem;
+    max-width:20rem;
+}
+
+.note-text {
+    font-style: italic;
+    font-size: 14px;
+    color: rgb(52, 52, 58);
+}
