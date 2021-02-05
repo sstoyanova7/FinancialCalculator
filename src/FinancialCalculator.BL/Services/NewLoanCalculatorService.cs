@@ -41,11 +41,7 @@
 
             //TO DO: PromoPeriod % Promorate
             //TO DO: GracePeriod
-            //TO DO: think of other validations
-            //TO DO: add exception handling
-            //TO DO: check logs format
-            //TO DO: calculate AnnualPercentCost ?!
-            //TO DO: why the fuck the last monthly installment is different
+            //TO DO: calculate AnnualPercentCost ?
             try
             {
 
