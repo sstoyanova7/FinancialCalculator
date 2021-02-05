@@ -37,17 +37,16 @@ namespace FinancialCalculator.BL.Services
         public async void insertUser(UserCreateRequestModel user)
         {
             using var conn = await _database.CreateConnectionAsync();
-
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
 
             var parameters = new
             {
-                Name = user.name,
+                Username = user.username,
                 Email = user.email,
-                Password = user.password,
+                Password = hashedPassword,
             };
 
-            await conn.ExecuteAsync("INSERT INTO [USER](Name, Email, Password) VALUES (@Name, @Email, @Password)", parameters);
+            await conn.ExecuteAsync("INSERT INTO [USER](Username, Email, Password) VALUES (@Username, @Email, @Password)", parameters);
         }
 
         public async void deleteUserById(long id)
@@ -58,10 +57,33 @@ namespace FinancialCalculator.BL.Services
             await conn.ExecuteAsync("DELETE FROM [USER] WHERE Id=@Id", parameters);
         }
 
+        public async Task<UserModel> getFullUserByName(string name)
+        {
+            // add handling for not existing user
+            using var conn = await _database.CreateConnectionAsync();
+            var parameters = new { Username = name };
+            var result = conn.QueryFirstOrDefault<UserModel>
+               ("SELECT * FROM [User] WHERE Username = @Username", parameters);
+            return result;
+        }
+        public async Task<bool> isUserExisting(string name, string email)
+        {
+            using var conn = await _database.CreateConnectionAsync();
+            var parameters = new { Username = name, Email = email };
+            var result = conn.QueryFirstOrDefault<UserModel>
+               ("SELECT * FROM [User] WHERE Username = @Username and Email = @Email", parameters);
+            return result != null ? true : false;
+        }
+
+        public bool isUserPasswordCorrect(string hashedPassword, string enteredPassowrd)
+        {
+            return BCrypt.Net.BCrypt.Verify(enteredPassowrd, hashedPassword);            
+        }
+
         private UserModel fromDtoToUser(UserCreateRequestModel userRequestModel)
         {
             UserModel userModel = new UserModel();
-            userRequestModel.name = userModel.name;
+            userRequestModel.username = userModel.username;
             userRequestModel.email = userModel.email;
             userRequestModel.password = userModel.password;
             return userModel;

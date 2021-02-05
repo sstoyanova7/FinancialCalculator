@@ -15,6 +15,7 @@ namespace FinancialCalculator.Host.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserDataService userDataService;
+
         public UserController(IUserDataService service)
         {
             userDataService = service;

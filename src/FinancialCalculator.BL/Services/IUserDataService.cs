@@ -1,4 +1,5 @@
 ﻿using FinancialCalculator.Models.RequestModels;
+using FinancialCalculator.Models.ResponseModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,5 +16,11 @@ namespace FinancialCalculator.BL.Services
         void deleteUserById(long id);
 
         Task<List<UserRequestModel>> getAllUsers();
+
+        Task<UserModel> getFullUserByName(string name);
+
+        bool isUserPasswordCorrect(string hashedPassword, string enteredPassowrd);
+
+        Task<bool> isUserExisting(string name, string email);
     }
 }
