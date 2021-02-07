@@ -1,11 +1,13 @@
-﻿using FinancialCalculator.BL.Services;
+﻿using FinancialCalculator.DAL.Configuration.Database;
+
+using FinancialCalculator.Host.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FinancialCalculator.BL.Configuration.Database
+namespace FinancialCalculator.Host.Services
 {
     public static class RegisterServices
     {

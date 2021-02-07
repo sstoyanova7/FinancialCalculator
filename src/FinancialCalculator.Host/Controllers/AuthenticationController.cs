@@ -1,4 +1,4 @@
-﻿using FinancialCalculator.BL.Services;
+﻿using FinancialCalculator.Host.Services;
 using FinancialCalculator.Models.RequestModels;
 using FinancialCalculator.Models.ResponseModels;
 using Microsoft.AspNetCore.Authorization;

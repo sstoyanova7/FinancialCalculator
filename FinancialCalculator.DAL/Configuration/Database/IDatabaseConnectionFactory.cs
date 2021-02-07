@@ -4,9 +4,9 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialCalculator.BL.Configuration.Database
+namespace FinancialCalculator.DAL.Configuration.Database
 {
-    interface IDatabaseConnectionFactory
+    public interface IDatabaseConnectionFactory
     {
         Task<IDbConnection> CreateConnectionAsync();
     }

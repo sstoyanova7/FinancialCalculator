@@ -10,7 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-namespace FinancialCalculator.BL.Services
+namespace FinancialCalculator.Host.Services
 {
     public class JWTService : IJWTService
     {
@@ -29,21 +29,21 @@ namespace FinancialCalculator.BL.Services
 
         public string GenerateJSONWebToken(UserLoginRequestModel userInfo)
         {
-            UserModel user = userDataService.getFullUserByName(userInfo.username).Result;
-            bool isProvidedPasswordCorrect = userDataService.isUserPasswordCorrect(user.password, userInfo.password);
+            UserModel user = userDataService.getFullUserByName(userInfo.Username).Result;
+            bool isProvidedPasswordCorrect = userDataService.isUserPasswordCorrect(user.Password, userInfo.Password);
 
             if (!isProvidedPasswordCorrect)
             {
                 // change exception to custom one
-                throw new Exception("Wrong password");
+                throw new Exception("Wrong Password");
             }
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[] {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.username),
-                new Claim(JwtRegisteredClaimNames.Email, user.email),
+                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -60,7 +60,7 @@ namespace FinancialCalculator.BL.Services
         {
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadToken(jwt) as JwtSecurityToken;
-            var email = jwtToken.Claims.First(claim => claim.Type == "email").Value;
+            var email = jwtToken.Claims.First(claim => claim.Type == "Email").Value;
             var subject = jwtToken.Claims.First(claim => claim.Type == "sub").Value;
 
             bool isUserExisting = await userDataService.isUserExisting(subject, email);

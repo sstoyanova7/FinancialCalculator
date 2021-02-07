@@ -5,9 +5,8 @@ namespace FinancialCalculatorFE
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using FinancialCalculator.BL.Configuration.Database;
-    using FinancialCalculator.BL.Services;
     using FinancialCalculator.BL.Validation;
+    using FinancialCalculator.Host.Services;
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Models.ResponseModels;
     using FinancialCalculator.Services;
@@ -85,7 +84,7 @@ namespace FinancialCalculatorFE
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{Id?}");
             });
 
             app.UseSwagger();

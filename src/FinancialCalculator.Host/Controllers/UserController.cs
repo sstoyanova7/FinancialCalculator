@@ -1,4 +1,4 @@
-﻿using FinancialCalculator.BL.Services;
+﻿using FinancialCalculator.Host.Services;
 using FinancialCalculator.Models.RequestModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +22,7 @@ namespace FinancialCalculator.Host.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{Id}")]
         public UserRequestModel GetUserById(long id)
         {
             UserRequestModel userDto = userDataService.getUserById(id).Result;
@@ -44,7 +44,7 @@ namespace FinancialCalculator.Host.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{Id}")]
         public void DeleteUserById(long id)
         {
             userDataService.deleteUserById(id);

@@ -5,9 +5,9 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialCalculator.BL.Configuration.Database
+namespace FinancialCalculator.DAL.Configuration.Database
 {
-    class SqlConnectionFactory : IDatabaseConnectionFactory
+    public class SqlConnectionFactory : IDatabaseConnectionFactory
     {
         private readonly string _connectionString;
         public SqlConnectionFactory(string connectionString) => _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));

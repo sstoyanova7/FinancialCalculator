@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using FinancialCalculator.BL.Configuration.Database;
+using FinancialCalculator.DAL.Configuration.Database;
 using FinancialCalculator.Models.RequestModels;
 using FinancialCalculator.Models.ResponseModels;
 using System;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialCalculator.BL.Services
+namespace FinancialCalculator.Host.Services
 {
     class UserDataService : IUserDataService
     {
@@ -37,12 +37,12 @@ namespace FinancialCalculator.BL.Services
         public async void insertUser(UserCreateRequestModel user)
         {
             using var conn = await _database.CreateConnectionAsync();
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             var parameters = new
             {
-                Username = user.username,
-                Email = user.email,
+                Username = user.Username,
+                Email = user.Email,
                 Password = hashedPassword,
             };
 
@@ -83,9 +83,9 @@ namespace FinancialCalculator.BL.Services
         private UserModel fromDtoToUser(UserCreateRequestModel userRequestModel)
         {
             UserModel userModel = new UserModel();
-            userRequestModel.username = userModel.username;
-            userRequestModel.email = userModel.email;
-            userRequestModel.password = userModel.password;
+            userRequestModel.Username = userModel.Username;
+            userRequestModel.Email = userModel.Email;
+            userRequestModel.Password = userModel.Password;
             return userModel;
         }
     }
