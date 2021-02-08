@@ -465,5 +465,204 @@
 
             Assert.AreEqual(actual, expected);
         }
+
+        [Test]
+        public void NewLoanNoFeesNoPromoPeriodGracePeriodAnuityInstallments()
+        {
+            var requestModel = new NewLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Period = 15,
+                Interest = 2,
+                InstallmentType = Installments.AnnuityInstallment,
+                GracePeriod = 2
+
+            };
+            var actual = _service.Calculate(requestModel);
+
+            var expected = new NewLoanResponseModel
+            {
+                Status = HttpStatusCode.OK,
+                //AnnualPercentCost = 2.02127M
+                AnnualPercentCost = 0,
+                TotalCost = 1015.06M,
+                FeesCost = 0M,
+                InterestsCost = 15.06M,
+                InstallmentsCost = 1015.06M
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
+
+        [Test]
+        public void NewLoanNoFeesNoPromoPeriodGracePeriodDecreasingInstallments()
+        {
+            var requestModel = new NewLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Period = 15,
+                Interest = 2,
+                InstallmentType = Installments.DecreasingInstallment,
+                GracePeriod = 2
+            };
+            var actual = _service.Calculate(requestModel);
+
+            var expected = new NewLoanResponseModel
+            {
+                Status = HttpStatusCode.OK,
+                //AnnualPercentCost = 2.0197M
+                AnnualPercentCost = 0,
+                TotalCost = 1015.01M,
+                FeesCost = 0M,
+                InterestsCost = 15.01M,
+                InstallmentsCost = 1015.01M
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
+
+        [Test]
+        public void NewLoanAllFeesNoPromoPeriodGracePeriodAnnuityInstallments()
+        {
+            var requestModel = new NewLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Period = 15,
+                Interest = 2,
+                InstallmentType = Installments.AnnuityInstallment,
+                GracePeriod = 2,
+                Fees = new List<FeeModel>
+                {
+                    new FeeModel
+                    {
+                        Type = FeeType.StartingApplicationFee,
+                        Value = 20,
+                        ValueType = FeeValueType.Currency
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.StartingProcessingFee,
+                        Value = 1,
+                        ValueType = FeeValueType.Percent
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.OtherStartingFees,
+                        Value = 12,
+                        ValueType = FeeValueType.Currency
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.AnnualManagementFee,
+                        Value = 2,
+                        ValueType = FeeValueType.Percent
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.OtherAnnualFees,
+                        Value = 1,
+                        ValueType = FeeValueType.Currency
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.MonthlyManagementFee,
+                        Value = 0.5M,
+                        ValueType = FeeValueType.Percent
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.OtherMonthlyFees,
+                        Value = 0.5M,
+                        ValueType = FeeValueType.Currency
+                    }
+                }
+            };
+            var actual = _service.Calculate(requestModel);
+
+            var expected = new NewLoanResponseModel
+            {
+                Status = HttpStatusCode.OK,
+                //AnnualPercentCost = 16.8478M
+                AnnualPercentCost = 0,
+                TotalCost = 1115.34M,
+                FeesCost = 100.28M,
+                InterestsCost = 15.06M,
+                InstallmentsCost = 1015.06M
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
+
+        [Test]
+        public void NewLoanAllFeesNoPromoPeriodGracePeriodDecreasingInstallments()
+        {
+            var requestModel = new NewLoanRequestModel
+            {
+                LoanAmount = 1000,
+                Period = 15,
+                Interest = 2,
+                InstallmentType = Installments.DecreasingInstallment,
+                GracePeriod = 2,
+                Fees = new List<FeeModel>
+                {
+                    new FeeModel
+                    {
+                        Type = FeeType.StartingApplicationFee,
+                        Value = 20,
+                        ValueType = FeeValueType.Currency
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.StartingProcessingFee,
+                        Value = 1,
+                        ValueType = FeeValueType.Percent
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.OtherStartingFees,
+                        Value = 12,
+                        ValueType = FeeValueType.Currency
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.AnnualManagementFee,
+                        Value = 2,
+                        ValueType = FeeValueType.Percent
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.OtherAnnualFees,
+                        Value = 1,
+                        ValueType = FeeValueType.Currency
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.MonthlyManagementFee,
+                        Value = 0.5M,
+                        ValueType = FeeValueType.Percent
+                    },
+                     new FeeModel
+                    {
+                        Type = FeeType.OtherMonthlyFees,
+                        Value = 0.5M,
+                        ValueType = FeeValueType.Currency
+                    }
+                }
+            };
+            var actual = _service.Calculate(requestModel);
+
+            var expected = new NewLoanResponseModel
+            {
+                Status = HttpStatusCode.OK,
+                //AnnualPercentCost = 16.8625M
+                AnnualPercentCost = 0,
+                TotalCost = 1115.13M,
+                FeesCost = 100.12M,
+                InterestsCost = 15.01M,
+                InstallmentsCost = 1015.01M
+            };
+
+            Assert.AreEqual(actual, expected);
+        }
     }
 }

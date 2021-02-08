@@ -59,9 +59,9 @@
                 validated.AddError("Promo period must be less than the whole period.");
             }
 
-            if (request.PromoInterest <= 0)
+            if (request.PromoInterest < 0)
             {
-                validated.AddError("Promo interest must be greater than 0.");
+                validated.AddError("Promo interest cannot be less than 0.");
             }
 
             if (request.PromoInterest >= request.Interest)
@@ -73,6 +73,7 @@
             {
                 validated.AddError("Grace period cannot be less than zero months.");
             }
+
 
             if (request.GracePeriod >= request.Period)
             {
