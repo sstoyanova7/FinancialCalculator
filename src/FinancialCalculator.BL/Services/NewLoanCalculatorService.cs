@@ -41,11 +41,7 @@
 
             //TO DO: PromoPeriod % Promorate
             //TO DO: GracePeriod
-            //TO DO: think of other validations
-            //TO DO: add exception handling
-            //TO DO: check logs format
-            //TO DO: calculate AnnualPercentCost ?!
-            //TO DO: why the fuck the last monthly installment is different
+            //TO DO: calculate AnnualPercentCost ?
             try
             {
 
@@ -59,7 +55,8 @@
                 return new NewLoanResponseModel
                 {
                     Status = HttpStatusCode.OK,
-                    AnnualPercentCost = CalcHelpers.CalculateAPR(totalFeesCost, totalInterestCost, requestModel.LoanAmount, requestModel.Period),
+                    //AnnualPercentCost = CalcHelpers.CalculateAPR(totalFeesCost, totalInterestCost, requestModel.LoanAmount, requestModel.Period),
+                    AnnualPercentCost = 0,
                     TotalCost = totalMonthlyInstallmentsCost + totalFeesCost,
                     FeesCost = totalFeesCost,
                     InterestsCost = totalInterestCost,
@@ -123,8 +120,6 @@
             }
 
             return installments.Select(x => x.Value);
-
-            throw new NotImplementedException();
         }
 
         private IEnumerable<InstallmentForRepaymentPlanModel> GetAnuityPlan(NewLoanRequestModel requestModel)

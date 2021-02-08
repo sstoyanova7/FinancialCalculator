@@ -25,9 +25,9 @@
                 && TotalCost == b.TotalCost
                 && FeesCost == b.FeesCost
                 && InterestsCost == b.InterestsCost
-                && InstallmentsCost == b.InstallmentsCost
-                && RepaymentPlan.All(x => b.RepaymentPlan.Any(y => x == y))
-                && b.RepaymentPlan.All(x => RepaymentPlan.Any(y => x == y));                
+                && InstallmentsCost == b.InstallmentsCost;
+                //&& RepaymentPlan.All(x => b.RepaymentPlan.Any(y => x .Equals(y)))
+                //&& b.RepaymentPlan.All(x => RepaymentPlan.Any(y => x.Equals(y)));                
         }
     }
 }

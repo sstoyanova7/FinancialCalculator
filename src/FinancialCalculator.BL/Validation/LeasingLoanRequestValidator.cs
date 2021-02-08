@@ -30,6 +30,11 @@
                 validated.AddError("Starting installment cannot be less than zero.");
             }
 
+            if(request.ProductPrice < request.StartingInstallment)
+            {
+                validated.AddError("Product price cannot be less than starting installment");
+            }
+
             if (request.Period < 1)
             {
                 validated.AddError("Period must be at least 1 month.");
