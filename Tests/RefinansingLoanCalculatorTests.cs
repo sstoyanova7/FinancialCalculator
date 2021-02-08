@@ -1,7 +1,6 @@
 namespace Tests
 {
     using FinancialCalculator.BL.Validation;
-    using FinancialCalculator.Models.Enums;
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Models.ResponseModels;
     using FinancialCalculator.Services;

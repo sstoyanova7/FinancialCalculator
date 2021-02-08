@@ -1,14 +1,12 @@
-﻿using Dapper;
-using FinancialCalculator.DAL.Configuration.Database;
-using FinancialCalculator.Models.RequestModels;
-using FinancialCalculator.Models.ResponseModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FinancialCalculator.Host.Services
+﻿namespace FinancialCalculator.Host.Services
 {
+    using Dapper;
+    using FinancialCalculator.DAL.Configuration.Database;
+    using FinancialCalculator.Models.RequestModels;
+    using FinancialCalculator.Models.ResponseModels;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     class UserDataService : IUserDataService
     {
         private readonly IDatabaseConnectionFactory _database;

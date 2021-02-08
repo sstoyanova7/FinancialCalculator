@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FinancialCalculator.Models.ResponseModels
+﻿namespace FinancialCalculator.Models.ResponseModels
 {
     public class UserModel
     {

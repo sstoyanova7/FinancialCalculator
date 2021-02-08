@@ -7,10 +7,8 @@
     using FinancialCalculator.Services;
     using Moq;
     using NUnit.Framework;
-    using System;
     using System.Collections.Generic;
     using System.Net;
-    using System.Text;
 
     public class NewLoanCalculatorTests
     {
