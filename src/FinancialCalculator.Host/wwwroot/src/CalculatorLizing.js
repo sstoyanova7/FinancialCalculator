@@ -24,7 +24,7 @@ class CalculatorLizing extends React.Component {
             leasePeriod: "",
             monthlyInstallment: "",
             startingFee: "",
-            currency: "ЛЕВА",
+            feeValueType: "1",
             calculated: false,
             result: {
                 anualPercentExpense: "",
@@ -40,12 +40,7 @@ class CalculatorLizing extends React.Component {
         this.setState({
             [id]: value
         })
-    }
-
-    onSelectType = (event) => {
-        this.setState({
-            currency: event.target.value
-        });
+      
     }
 
     //Функция за Валидация на state
@@ -55,10 +50,10 @@ class CalculatorLizing extends React.Component {
 
     onCalculateLeasing = (event) => {
         // if validation === true => post/get 
-        const userAgent = navigator.userAgent;
-        let postInformation = {}
+        let userAgent = navigator.userAgent;
+        let postInformation = {};
         if (!this.state.startingFee) {
-             postInformation = {
+            postInformation = {
                 'UserAgent': userAgent,
                 'ProductPrice': parseFloat(this.state.productPrice),
                 'StartingInstallment': parseFloat(this.state.startingInstallment),
@@ -71,15 +66,16 @@ class CalculatorLizing extends React.Component {
                 'ProductPrice': parseFloat(this.state.productPrice),
                 'StartingInstallment': parseFloat(this.state.startingInstallment),
                 'Period': parseFloat(this.state.leasePeriod),
-                'MonthlyInstallment': parseFloat(this.state.monthlyInstallment),
+                'MonthlyInstallment': parseInt(this.state.monthlyInstallment),
                 'StartingFee': {
                     'Type': 1,
                     'Value': parseFloat(this.state.startingFee),
-                    'ValueType': 1
+                    'ValueType': parseInt(this.state.feeValueType)
+                    //Change valueType 
                 }
             }
         }
-     
+    
         axios({
             method: 'post',
             url: '/FinancialCalculator/api/calculateLeasingLoan',
@@ -87,7 +83,7 @@ class CalculatorLizing extends React.Component {
                 ...postInformation
             }
         }).then(res => {
-           
+            
             this.setState({
                 calculated: true,
                 ...{
@@ -107,13 +103,22 @@ class CalculatorLizing extends React.Component {
             //result = response;
         });
     }
+    
+    onChangeFeeType = (event) => {
+        const name = event.target.id;
+        const value = event.target.value;
+        this.setState({
+            [name]: value
+        })
+       
+    }
 
     addEventListeners() {
         this.calculateLeasingButtonRef.current.addEventListener("click", this.onCalculateLeasing);
         const inputs = document.getElementById('input-list');
         inputs.addEventListener("input", this.inputsOnChange);
-        const currencyRadioButtons = document.getElementsByClassName("leasingCurrency") || [];
-        Array.from(currencyRadioButtons).forEach((box) => box.addEventListener("select", this.onSelectType));
+        const selectFeeType = document.getElementById("feeValueType");
+        selectFeeType.addEventListener("change", this.onChangeFeeType);
     }
 
     componentDidMount() {
@@ -129,7 +134,7 @@ class CalculatorLizing extends React.Component {
                             <div id="input-list">
                                 <div className="calculator-input-row">
                                     <div className="calculator-input-pair">
-                                        <ui5-input id="productPrice" placeholder="Въведете цена на стоката" required></ui5-input>
+                                        <ui5-input id="productPrice" placeholder="Въведете цена на стоката*" required></ui5-input>
                                     </div>
                                     <div className="calculator-input-pair">
                                         <ui5-input id="startingInstallment" placeholder="Първоначална вноска*" required></ui5-input>
@@ -142,16 +147,19 @@ class CalculatorLizing extends React.Component {
                                     <div className="calculator-input-pair">
                                         <ui5-input id="monthlyInstallment" placeholder="Месечна вноска*" required></ui5-input>
                                     </div>
+
                                     <div className="calculator-input-pair">
-                                        <ui5-input id="startingFee" placeholder="Първоначална такса за обработка" required></ui5-input>
+
+                                        <ui5-input id="startingFee" placeholder="Първоначална такса" required></ui5-input>
+                                        <div id="fee-select">
+                                            <select id="feeValueType">
+                                                <option value="1">лв</option>
+                                                <option value="0">%</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div className="calculator-calculation-end">
-                                        <div className="calculator-input-pair">
-                                            <div id="radioGroup">
-                                                <ui5-radiobutton text="Лева" value="ЛЕВА" selected name="Currency" class="leasingCurrency"></ui5-radiobutton>
-                                                <ui5-radiobutton text="Проценти" value="Проценти" name="Currency" class="leasingCurrency"></ui5-radiobutton>
-                                            </div>
-                                        </div>
+
                                         <div className="calculator-input-pair">
                                             <ui5-button ref={this.calculateLeasingButtonRef} design="Emphasized">ИЗЧИСЛИ</ui5-button>
                                         </div>

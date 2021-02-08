@@ -1,32 +1,39 @@
 .page {
     float: left;
     display: inline;
-    max-width:55rem;
+    max-width: 55rem;
     padding-left: 2.5rem;
     padding-top: 2.5rem;
+}
+
+a {
+    text-decoration: none;
+    color: #0f35bf;
 }
 
 .sub-page {
     padding-bottom: 4rem;
 }
 
-.list-items{
+.list-items {
     margin: auto;
     width: 400px;
 }
 
 .input-button {
-    display:flex;
-    width:100%;
-    justify-content:flex-end;
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    margin-bottom: 10px;
 }
 
 .calculator-input-row {
     display: flex;
     margin-top: 0.5rem;
-    
 }
+
 .calculator-input-pair {
+    position: relative;
     display: inline;
     float: left;
     margin-right: 1rem;
@@ -50,45 +57,78 @@
 }
 
 .lease-info {
-    text-align:center;
+    text-align: center;
+}
+
+
+/* Home - Login/Register Forms */
+.container {
+    display: flex;
+    max-width: 1100px;
+    max-height: 700px;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .account-form {
-    width: 25%;
-    float:left; 
-    display:inline; 
-    margin-left: 2rem;
-    margin-right: 5rem;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .account-input {
+    width: 350px;
+    height: 250px;
+    margin-top: 2rem;
     display: flex;
-    padding-top: 1.5rem;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-
+    justify-content: space-around;
 }
 
-.text-input{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 0.2rem;
+.account-input-username {
+    margin-bottom: -1.5rem;
+}
+
+.text-input {
+    margin-top: 0.5rem;
 }
 
 .account-button-actions {
-    padding-top: 1.5rem;
-    padding-bottom: 1rem;
+    margin-top: -2rem;
     display: flex;
-    padding-left: 70%;
+    flex-direction: column;
+    width: 40%;
+    justify-content: center;
 }
 
-.info {
-    max-width: 20%;
+*:focus {
+    outline: none;
 }
 
-.starting-fees  {
-    display:flex;
+
+.register-input {
+    width: 350px;
+    height: 250px;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.register-input-username,
+.register-input-password,
+.register-input-confirm-password,
+.register-input-email {
+    margin-top: -2rem;
+}
+
+
+
+.starting-fees {
+    display: flex;
 }
 
 .annual-fees {
@@ -98,3 +138,97 @@
 .monthly-fees {
     display: flex;
 }
+
+
+/* Credit Calculator */
+#applicationFeeValueType,
+#annualManagementFeeValueType,
+#monthlyManagementFeeValueType {
+    position: absolute;
+    top: 54px;
+    left: 170px;
+    width: 40px;
+    height: 36px;
+    border-color: #999;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+#processingFeeValueType,
+#otherFeesValueType,
+#otherAnnualFeesValueType,
+#otherMonthlyFeesValueType,
+#feeValueType {
+    position: absolute;
+    top: 0;
+    left: calc(100% - 40px);
+    width: 40px;
+    height: 36px;
+    border-color: #999;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+*:focus {
+    outline: none;
+}
+
+
+/* Calculators */
+.calculator-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+}
+
+.calculators-cards {
+    margin-top: 2rem;
+    display: flex;
+    height: 300px;
+    justify-content: center;
+}
+
+.credit-calculator,
+.lease-calculator,
+.refinance-calculator {
+    width: 400px;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.card-content {
+    display: flex;
+    height: 200px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.calculator-content-text {
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.credit-calculator-go-to {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .credit-calculator-go-to > a {
+        margin-top: 1rem;
+        background: #305aff;
+        padding: 0.5rem;
+        width: 7rem;
+        border-radius: 5px;
+        color: #fff;
+        color: #fff;
+        transition: 0.6s;
+    }
+
+        .credit-calculator-go-to > a:hover {
+            color: #fff;
+            background-color: #0028c7;
+        }
