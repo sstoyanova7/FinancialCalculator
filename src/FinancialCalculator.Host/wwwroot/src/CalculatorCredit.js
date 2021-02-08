@@ -103,7 +103,7 @@ class CalculatorCredit extends React.Component {
         if (fees.length !== 0) {
             postInformation['fees'] = fees
         }
-        console.log(postInformation)
+       
         axios({
             method: 'post',
             url: '/FinancialCalculator/api/calculateNewLoan',
@@ -111,7 +111,9 @@ class CalculatorCredit extends React.Component {
                 ...postInformation
             }
         }).then(res => {
-            console.log(res);
+            
+        }).then(err => {
+            console.log(err);
         })
         
 
