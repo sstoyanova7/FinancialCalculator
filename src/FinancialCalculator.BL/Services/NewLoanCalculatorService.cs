@@ -39,8 +39,7 @@
                 };
             }
 
-            //TO DO: PromoPeriod % Promorate
-            //TO DO: GracePeriod
+            //TO DO: PromoPeriod % Promoratе
             //TO DO: calculate AnnualPercentCost ?
             try
             {
@@ -100,6 +99,7 @@
 
             for (var i = 1; i <= requestModel.Period; i++)
             {
+                var interest = i <= requestModel.PromoPeriod ? requestModel.PromoInterest : requestModel.Interest;
                 decimal currentPrincipalBalance;
                 decimal interestInstallment;
                 decimal currentPrincipalInstallment;
@@ -108,14 +108,14 @@
                 if (i <= requestModel.GracePeriod)
                 {
                     currentPrincipalBalance = requestModel.LoanAmount;
-                    interestInstallment = CalcHelpers.CalculateInterestInstallment(requestModel.Interest, currentPrincipalBalance);
+                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
                     currentPrincipalInstallment = 0;
                     monthlyInstallment = interestInstallment;
                 }
                 else
                 { 
                     currentPrincipalBalance = CalcHelpers.CalculatePrincipalBalance(installments[i - 1]);
-                    interestInstallment = CalcHelpers.CalculateInterestInstallment(requestModel.Interest, currentPrincipalBalance);
+                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
                     currentPrincipalInstallment = i == requestModel.Period ? lastPrincipalInstallment : principalInstallment;
                     monthlyInstallment = interestInstallment + currentPrincipalInstallment;
                 }
