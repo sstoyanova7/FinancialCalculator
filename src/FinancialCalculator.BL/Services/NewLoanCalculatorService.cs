@@ -161,6 +161,7 @@
 
             for (var i = 1; i <= requestModel.Period; i++)
             {
+                var interest = i <= requestModel.PromoPeriod ? requestModel.PromoInterest : requestModel.Interest;
                 decimal currentPrincipalBalance;
                 decimal interestInstallment;
                 decimal fees;
@@ -170,7 +171,7 @@
                 if (i <= requestModel.GracePeriod)
                 {
                     currentPrincipalBalance = requestModel.LoanAmount;
-                    interestInstallment = CalcHelpers.CalculateInterestInstallment(requestModel.Interest, currentPrincipalBalance);
+                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
                     fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
                     principalInstallment = 0;
                     monthlyInstallment = interestInstallment;
@@ -178,7 +179,7 @@
                 else
                 {
                     currentPrincipalBalance = CalcHelpers.CalculatePrincipalBalance(installments[i - 1]);
-                    interestInstallment = CalcHelpers.CalculateInterestInstallment(requestModel.Interest, currentPrincipalBalance);
+                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
                     fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
                     principalInstallment = i == requestModel.Period ? requestModel.LoanAmount - installments.Sum(x => x.Value.PrincipalInstallment) : pmt - interestInstallment;
                     monthlyInstallment = i == requestModel.Period ? principalInstallment + interestInstallment : pmt;
