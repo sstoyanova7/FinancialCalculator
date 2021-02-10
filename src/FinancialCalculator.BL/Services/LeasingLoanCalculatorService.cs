@@ -1,12 +1,9 @@
 ﻿namespace FinancialCalculator.Services
 {
     using FinancialCalculator.BL.Utilities;
-    using FinancialCalculator.Models.Enums;
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Models.ResponseModels;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Serilog;
     using System.Net;
     using FinancialCalculator.BL.Validation;

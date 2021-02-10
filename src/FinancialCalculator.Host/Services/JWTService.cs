@@ -1,17 +1,16 @@
-﻿using FinancialCalculator.Models.RequestModels;
-using FinancialCalculator.Models.ResponseModels;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-
-namespace FinancialCalculator.Host.Services
+﻿namespace FinancialCalculator.Host.Services
 {
+    using FinancialCalculator.Models.RequestModels;
+    using FinancialCalculator.Models.ResponseModels;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
+    using Serilog;
+    using System;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+
     public class JWTService : IJWTService
     {
         private readonly ILogger _logger;

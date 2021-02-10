@@ -1,11 +1,7 @@
-﻿using FinancialCalculator.Models.RequestModels;
-using FinancialCalculator.Models.ResponseModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FinancialCalculator.Host.Services
+﻿namespace FinancialCalculator.Host.Services
 {
+    using FinancialCalculator.Models.RequestModels;
+
     public interface IJWTService
     {
         string GenerateJSONWebToken(UserLoginRequestModel userInfo);

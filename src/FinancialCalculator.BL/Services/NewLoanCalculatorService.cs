@@ -39,8 +39,7 @@
                 };
             }
 
-            //TO DO: PromoPeriod % Promorate
-            //TO DO: GracePeriod
+            //TO DO: PromoPeriod % Promoratе
             //TO DO: calculate AnnualPercentCost ?
             try
             {
@@ -78,9 +77,9 @@
 
         private IEnumerable<InstallmentForRepaymentPlanModel> GetDecreasingPlan(NewLoanRequestModel requestModel)
         {
-            var principalInstallment = Math.Round(requestModel.LoanAmount / requestModel.Period, 2);
-            var lastPrincipalInstallment = requestModel.LoanAmount - (requestModel.Period - 1) * principalInstallment;
-
+            var actualPeriod = requestModel.Period - requestModel.GracePeriod;
+            var principalInstallment = Math.Round(requestModel.LoanAmount / actualPeriod, 2);
+            var lastPrincipalInstallment = requestModel.LoanAmount - (actualPeriod - 1) * principalInstallment;
             var installments = new Dictionary<int, InstallmentForRepaymentPlanModel>();
             var startingFees = CalcHelpers.CalculateStartingFeesCost(requestModel.LoanAmount, requestModel.Fees);
 
@@ -100,10 +99,27 @@
 
             for (var i = 1; i <= requestModel.Period; i++)
             {
-                var currentPrincipalBalance = CalcHelpers.CalculatePrincipalBalance(installments[i - 1]);
-                var interestInstallment = CalcHelpers.CalculateInterestInstallment(requestModel.Interest, currentPrincipalBalance);
-                var currentPrincipalInstallment = i == requestModel.Period ? lastPrincipalInstallment : principalInstallment;
-                var monthlyInstallment = interestInstallment + currentPrincipalInstallment;
+                var interest = i <= requestModel.PromoPeriod ? requestModel.PromoInterest : requestModel.Interest;
+                decimal currentPrincipalBalance;
+                decimal interestInstallment;
+                decimal currentPrincipalInstallment;
+                decimal monthlyInstallment;
+
+                if (i <= requestModel.GracePeriod)
+                {
+                    currentPrincipalBalance = requestModel.LoanAmount;
+                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
+                    currentPrincipalInstallment = 0;
+                    monthlyInstallment = interestInstallment;
+                }
+                else
+                { 
+                    currentPrincipalBalance = CalcHelpers.CalculatePrincipalBalance(installments[i - 1]);
+                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
+                    currentPrincipalInstallment = i == requestModel.Period ? lastPrincipalInstallment : principalInstallment;
+                    monthlyInstallment = interestInstallment + currentPrincipalInstallment;
+                }
+
                 var fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
 
                 installments.Add(i, new InstallmentForRepaymentPlanModel
@@ -124,7 +140,8 @@
 
         private IEnumerable<InstallmentForRepaymentPlanModel> GetAnuityPlan(NewLoanRequestModel requestModel)
         {
-            var pmt = CalcHelpers.CalculatePMT(requestModel.Interest, requestModel.Period, requestModel.LoanAmount);
+            var actualPeriod = requestModel.Period - requestModel.GracePeriod;
+            var pmt = CalcHelpers.CalculatePMT(requestModel.Interest, actualPeriod, requestModel.LoanAmount);
 
             var installments = new Dictionary<int, InstallmentForRepaymentPlanModel>();
             var startingFees = CalcHelpers.CalculateStartingFeesCost(requestModel.LoanAmount, requestModel.Fees);
@@ -144,11 +161,30 @@
 
             for (var i = 1; i <= requestModel.Period; i++)
             {
-                var currentPrincipalBalance = CalcHelpers.CalculatePrincipalBalance(installments[i - 1]);
-                var interestInstallment = CalcHelpers.CalculateInterestInstallment(requestModel.Interest, currentPrincipalBalance);
-                var fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
-                var principalInstallment = i == requestModel.Period ? requestModel.LoanAmount - installments.Sum(x => x.Value.PrincipalInstallment) : pmt - interestInstallment;
-                var monthlyInstallment = i == requestModel.Period ? principalInstallment + interestInstallment : pmt;
+                var interest = i <= requestModel.PromoPeriod ? requestModel.PromoInterest : requestModel.Interest;
+                decimal currentPrincipalBalance;
+                decimal interestInstallment;
+                decimal fees;
+                decimal principalInstallment;
+                decimal monthlyInstallment;
+
+                if (i <= requestModel.GracePeriod)
+                {
+                    currentPrincipalBalance = requestModel.LoanAmount;
+                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
+                    fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
+                    principalInstallment = 0;
+                    monthlyInstallment = interestInstallment;
+                }
+                else
+                {
+                    currentPrincipalBalance = CalcHelpers.CalculatePrincipalBalance(installments[i - 1]);
+                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
+                    fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
+                    principalInstallment = i == requestModel.Period ? requestModel.LoanAmount - installments.Sum(x => x.Value.PrincipalInstallment) : pmt - interestInstallment;
+                    monthlyInstallment = i == requestModel.Period ? principalInstallment + interestInstallment : pmt;
+                } 
+                
                 installments.Add(i, new InstallmentForRepaymentPlanModel
                 {
                     Id = i,

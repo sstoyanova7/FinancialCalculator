@@ -1,15 +1,10 @@
-﻿using FinancialCalculator.Host.Services;
-using FinancialCalculator.Models.RequestModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FinancialCalculator.Host.Controllers
+﻿namespace FinancialCalculator.Host.Controllers
 {
+    using FinancialCalculator.Host.Services;
+    using FinancialCalculator.Models.RequestModels;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
+
     [ApiController]
     [Route("api/[controller]s/")]
     public class UserController : ControllerBase
