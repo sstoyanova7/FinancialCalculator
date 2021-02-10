@@ -83,7 +83,7 @@ class CalculatorLizing extends React.Component {
                 ...postInformation
             }
         }).then(res => {
-            
+            console.log(res.data);
             this.setState({
                 calculated: true,
                 ...{
@@ -126,6 +126,7 @@ class CalculatorLizing extends React.Component {
     }
 
     render() {
+        
         return (
             <div>
                 <div className="page">

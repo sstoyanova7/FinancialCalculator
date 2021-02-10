@@ -79,6 +79,7 @@ class CalculatorRefinance extends React.Component {
                 ...postInformation
             }
         }).then(res => {
+            console.log(res.data);
             let currentLoan = res.data['currentLoan'];
             let newLoan = res.data['newLoan'];
             this.setState({

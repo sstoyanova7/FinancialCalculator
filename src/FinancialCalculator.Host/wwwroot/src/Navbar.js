@@ -104,7 +104,7 @@ class Navbar extends React.Component {
                 </ui5-popover>
                 <div className="side">
                     <ui5-side-navigation  id="side-navigation">
-                        <ui5-side-navigation-item text="Начало" icon="home-share" id=""></ui5-side-navigation-item>
+                        <ui5-side-navigation-item text="Вход / Регистрация" icon="home-share" id=""></ui5-side-navigation-item>
                         <ui5-side-navigation-item text="Калкулатори" expanded icon="simulate" id="calculators">
                             <ui5-side-navigation-sub-item text="Кредитен" icon="step" id="calculators/credit"></ui5-side-navigation-sub-item>
                             <ui5-side-navigation-sub-item text="Лизингов" icon="step" id="calculators/lizing"></ui5-side-navigation-sub-item>

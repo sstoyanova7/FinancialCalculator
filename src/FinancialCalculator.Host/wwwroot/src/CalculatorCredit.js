@@ -46,7 +46,17 @@ class CalculatorCredit extends React.Component {
             monthlyManagementFee: "",
             monthlyManagementFeeValueType: "1",
             otherMonthlyFees: "",
-            otherMonthlyFeesValueType: "1"
+            otherMonthlyFeesValueType: "1",
+            calculated: false,
+            result: {
+                annualPercentCost: "",
+                feesCost: "",
+                installmentCost: "",
+                interestCost: "",
+                repaymentPlan: [],
+                totalCost: ""
+            },
+            errorMessage: ""
         }
         this.calculateCreditButtonRef = React.createRef();
     }
@@ -110,13 +120,26 @@ class CalculatorCredit extends React.Component {
             data: {
                 ...postInformation
             }
-        }).then(res => {
-            
+        }).then(res => {    
+            const repaymentPlan = [...res.data.repaymentPlan];
+            this.setState({
+                calculated: true,
+                result: {
+                    annualPercentCost: res.data['annualPercentCost'],
+                    installmentCost: res.data['installmentsCost'],
+                    interestCost: res.data['interestsCost'],
+                    feesCost: res.data['feesCost'],
+                    repaymentPlan: repaymentPlan,
+                    totalCost: res.data['totalCost']
+                }
+            })
+            console.log(this.state.result);
+            console.log(res.data);
         }).then(err => {
             console.log(err);
         })
         
-
+       
     }
 
     onFeeTypeValueChange = (event) => {
@@ -155,6 +178,7 @@ class CalculatorCredit extends React.Component {
         return (
             <div>
                 <div className="page">
+                    {this.state.calculated === false ?  
                     <div className="sub-page">
                         <ui5-card heading="Кредитен калкулатор" subheading="Пресметнете месечни вноски и ГПР (годишен процент на разходите)" class="small">
                             <div id="annual-percentage-of-fees">
@@ -300,8 +324,114 @@ class CalculatorCredit extends React.Component {
                                 </div>
                             </ui5-card>
                         </div>
-                    </div>
+                    </div> :
+                        <div className="sub-page">
+                            <div className="upper-table">
+                                <ui5-table class="demo-table" id="table">
+                                    <ui5-table-column slot="columns">
+                                        <ui5-title level="H4">Инфо</ui5-title>
+                                    </ui5-table-column>
+                                    <ui5-table-column slot="columns">
+                                        <ui5-title level="H4">Резултат</ui5-title>
+                                    </ui5-table-column>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Годишен процент разход</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.annualPercentCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Погасени лихви и такси</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.totalCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Такси и комисионни</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.feesCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Лихви</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.interestCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Вноски</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.installmentCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                </ui5-table>
+                            </div>
+                            <div className="repayment-plan">
+                                <ui5-table class="demo-table" id="table">
+                                    <ui5-table-column slot="columns">
+                                        <ui5-title level="H4">Инфо</ui5-title>
+                                    </ui5-table-column>
+                                    <ui5-table-column slot="columns">
+                                        <ui5-title level="H4">Резултат</ui5-title>
+                                    </ui5-table-column>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Годишен процент разход</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.annualPercentCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Погасени лихви и такси</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.totalCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Такси и комисионни</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.feesCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Лихви</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.interestCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                    <ui5-table-row>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5">Вноски</ui5-title>
+                                        </ui5-table-cell>
+                                        <ui5-table-cell>
+                                            <ui5-title level="H5"><i>{this.state.result.installmentCost}</i></ui5-title>
+                                        </ui5-table-cell>
+                                    </ui5-table-row>
+                                </ui5-table>
+                            </div>
+                        </div>
+
+                    }
+
                 </div>
+                
                 <Notes />
             </div>
         );

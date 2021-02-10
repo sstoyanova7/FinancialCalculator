@@ -14,17 +14,36 @@ import Calculators from "./Calculators";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      userData: {
-        email: "",
-        profileName: "Ekaterina",
-        password: ""
-      }
+      this.state = {
+          cookie: "",
+          userData: {
+              profileName: "goshko"
+          }
     }
 
   }
 
-  render() {
+    loadCookie = () => {
+        this.setState({
+            cookie: document.cookie
+        })
+
+    }
+
+    componentDidMount() {
+        if (document.cookie) {
+            this.setState({
+                cookie: document.cookie
+            })
+        } else {
+            this.setState({
+                cookie: ""
+            })
+        }
+    }
+
+    render() {
+    
     return (
       <div>
         <Router>
@@ -42,7 +61,7 @@ class App extends React.Component {
             <Route
               path="/" exact
               render={(props) => (
-                <Home {...props} userInfo={{profileName: this.state.userData.profileName}} />
+                  <Home {...props} userInfo={{ profileName: this.state.userData.profileName }} loadCookie={this.loadCookie }/>
               )}
             />
           </Switch>
