@@ -39,14 +39,12 @@
                 };
             }
 
-            //TO DO: PromoPeriod % Promoratе
-            //TO DO: calculate AnnualPercentCost ?
             try
             {
 
                 var plan = requestModel.InstallmentType == Installments.AnnuityInstallment
-                        ? GetAnuityPlan(requestModel).ToList()
-                        : GetDecreasingPlan(requestModel).ToList();
+                        ? CalcHelpers.GetAnuityPlan(requestModel).ToList()
+                        : CalcHelpers.GetDecreasingPlan(requestModel).ToList();
 
                 var totalFeesCost = plan.Sum(x => x.Fees);
                 var totalMonthlyInstallmentsCost = plan.Sum(x => x.MonthlyInstallment);
@@ -73,132 +71,6 @@
                     ErrorMessage = "Something went wrong. Please contact our support team."
                 };
             }
-        }
-
-        private IEnumerable<InstallmentForRepaymentPlanModel> GetDecreasingPlan(NewLoanRequestModel requestModel)
-        {
-            var actualPeriod = requestModel.Period - requestModel.GracePeriod;
-            var principalInstallment = Math.Round(requestModel.LoanAmount / actualPeriod, 2);
-            var lastPrincipalInstallment = requestModel.LoanAmount - (actualPeriod - 1) * principalInstallment;
-            var installments = new Dictionary<int, InstallmentForRepaymentPlanModel>();
-            var startingFees = CalcHelpers.CalculateStartingFeesCost(requestModel.LoanAmount, requestModel.Fees);
-
-            var zero = new InstallmentForRepaymentPlanModel
-            {
-                Id = 0,
-                Date = DateTime.UtcNow.Date,
-                MonthlyInstallment = 0,
-                PrincipalInstallment = 0,
-                InterestInstallment = 0,
-                PrincipalBalance = requestModel.LoanAmount,
-                Fees = startingFees,
-                CashFlow = requestModel.LoanAmount - startingFees
-            };
-
-            installments.Add(0, zero);
-
-            for (var i = 1; i <= requestModel.Period; i++)
-            {
-                var interest = i <= requestModel.PromoPeriod ? requestModel.PromoInterest : requestModel.Interest;
-                decimal currentPrincipalBalance;
-                decimal interestInstallment;
-                decimal currentPrincipalInstallment;
-                decimal monthlyInstallment;
-
-                if (i <= requestModel.GracePeriod)
-                {
-                    currentPrincipalBalance = requestModel.LoanAmount;
-                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
-                    currentPrincipalInstallment = 0;
-                    monthlyInstallment = interestInstallment;
-                }
-                else
-                { 
-                    currentPrincipalBalance = CalcHelpers.CalculatePrincipalBalance(installments[i - 1]);
-                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
-                    currentPrincipalInstallment = i == requestModel.Period ? lastPrincipalInstallment : principalInstallment;
-                    monthlyInstallment = interestInstallment + currentPrincipalInstallment;
-                }
-
-                var fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
-
-                installments.Add(i, new InstallmentForRepaymentPlanModel
-                {
-                    Id = i,
-                    Date = DateTime.UtcNow.Date.AddDays(i),
-                    MonthlyInstallment = monthlyInstallment,
-                    PrincipalInstallment = currentPrincipalInstallment,
-                    InterestInstallment = interestInstallment,
-                    PrincipalBalance = currentPrincipalBalance,
-                    Fees = fees,
-                    CashFlow = -monthlyInstallment - fees
-                });
-            }
-
-            return installments.Select(x => x.Value);
-        }
-
-        private IEnumerable<InstallmentForRepaymentPlanModel> GetAnuityPlan(NewLoanRequestModel requestModel)
-        {
-            var actualPeriod = requestModel.Period - requestModel.GracePeriod;
-            var pmt = CalcHelpers.CalculatePMT(requestModel.Interest, actualPeriod, requestModel.LoanAmount);
-
-            var installments = new Dictionary<int, InstallmentForRepaymentPlanModel>();
-            var startingFees = CalcHelpers.CalculateStartingFeesCost(requestModel.LoanAmount, requestModel.Fees);
-            var zero = new InstallmentForRepaymentPlanModel
-            {
-                Id = 0,
-                Date = DateTime.UtcNow.Date,
-                MonthlyInstallment = 0,
-                PrincipalInstallment = 0,
-                InterestInstallment = 0,
-                PrincipalBalance = requestModel.LoanAmount,
-                Fees = startingFees,
-                CashFlow = requestModel.LoanAmount - startingFees
-            };
-
-            installments.Add(0, zero);
-
-            for (var i = 1; i <= requestModel.Period; i++)
-            {
-                var interest = i <= requestModel.PromoPeriod ? requestModel.PromoInterest : requestModel.Interest;
-                decimal currentPrincipalBalance;
-                decimal interestInstallment;
-                decimal fees;
-                decimal principalInstallment;
-                decimal monthlyInstallment;
-
-                if (i <= requestModel.GracePeriod)
-                {
-                    currentPrincipalBalance = requestModel.LoanAmount;
-                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
-                    fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
-                    principalInstallment = 0;
-                    monthlyInstallment = interestInstallment;
-                }
-                else
-                {
-                    currentPrincipalBalance = CalcHelpers.CalculatePrincipalBalance(installments[i - 1]);
-                    interestInstallment = CalcHelpers.CalculateInterestInstallment(interest, currentPrincipalBalance);
-                    fees = CalcHelpers.CalculateFeesCost(i, currentPrincipalBalance, requestModel.Fees);
-                    principalInstallment = i == requestModel.Period ? requestModel.LoanAmount - installments.Sum(x => x.Value.PrincipalInstallment) : pmt - interestInstallment;
-                    monthlyInstallment = i == requestModel.Period ? principalInstallment + interestInstallment : pmt;
-                } 
-                
-                installments.Add(i, new InstallmentForRepaymentPlanModel
-                {
-                    Id = i,
-                    Date = DateTime.UtcNow.Date.AddDays(i),
-                    MonthlyInstallment = monthlyInstallment,
-                    PrincipalInstallment = principalInstallment,
-                    InterestInstallment = interestInstallment,
-                    PrincipalBalance = currentPrincipalBalance,
-                    Fees = fees,
-                    CashFlow = -monthlyInstallment - fees
-                });
-            }
-
-            return installments.Select(x => x.Value);
-        }
+        }       
     }
 }

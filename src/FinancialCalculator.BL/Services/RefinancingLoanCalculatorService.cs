@@ -43,35 +43,30 @@
 
             try
             {
-                var currentLoanCalculated = _newLoanService.Calculate(
-                    new NewLoanRequestModel
-                    {
-                        LoanAmount = requestModel.LoanAmount,
-                        Period = requestModel.Period,
-                        Interest = requestModel.Interest,
-                        InstallmentType = Installments.AnnuityInstallment
-                    });
+                var plan = CalcHelpers.GetAnuityPlan(new NewLoanRequestModel
+                {
+                    LoanAmount = requestModel.LoanAmount,
+                    Period = requestModel.Period,
+                    Interest = requestModel.Interest,
+                    InstallmentType = Installments.AnnuityInstallment
+                }).ToList();
+
 
                 var periodLeft = requestModel.Period - requestModel.CountOfPaidInstallments;
-                var monthlyInstallmentCurrentLoan = currentLoanCalculated.RepaymentPlan.First(x => x.Id == 1).MonthlyInstallment;
+                var monthlyInstallmentCurrentLoan = plan.First(x => x.Id == 1).MonthlyInstallment;
 
-                var moneyLeftToBePaid = requestModel.LoanAmount;
-
-                for (var i = 1; i <= requestModel.CountOfPaidInstallments; i++)
-                {
-                    moneyLeftToBePaid -= currentLoanCalculated.RepaymentPlan.First(x => x.Id == i).PrincipalInstallment;
-                }
+                var moneyLeftToBePaid = requestModel.LoanAmount - plan.Where(x => x.Id <= requestModel.CountOfPaidInstallments).Sum(x => x.PrincipalInstallment);
+                
 
                 var earlyInstallmentsFeeInCurrency = CalcHelpers.GetFeeCost(requestModel.EarlyInstallmentsFee, moneyLeftToBePaid);
 
-                var newLoanCalculated = _newLoanService.Calculate(
-                    new NewLoanRequestModel
-                    {
-                        LoanAmount = Math.Floor(moneyLeftToBePaid),
-                        Period = periodLeft,
-                        Interest = requestModel.NewInterest,
-                        InstallmentType = Installments.AnnuityInstallment,
-                        Fees = new List<FeeModel>
+                var newPlan = CalcHelpers.GetAnuityPlan(new NewLoanRequestModel
+                {
+                    LoanAmount = Math.Floor(moneyLeftToBePaid),
+                    Period = periodLeft,
+                    Interest = requestModel.NewInterest,
+                    InstallmentType = Installments.AnnuityInstallment,
+                    Fees = new List<FeeModel>
                         {
                             new FeeModel
                             {
@@ -86,9 +81,11 @@
                                 ValueType = FeeValueType.Percent
                             }
                         }
-                    });
+                }).ToList();
 
-                var monthlyInstallmentNewLoan = newLoanCalculated.RepaymentPlan.First(x => x.Id == 1).MonthlyInstallment;
+
+
+                var monthlyInstallmentNewLoan = newPlan.First(x => x.Id == 1).MonthlyInstallment;
                 var totalCostNewLoan = periodLeft * monthlyInstallmentNewLoan + earlyInstallmentsFeeInCurrency
                         + requestModel.StartingFeesCurrency + requestModel.StartingFeesPercent
                         + CalcHelpers.GetFeeCost(requestModel.StartingFeesPercent, moneyLeftToBePaid);
@@ -123,6 +120,6 @@
                     ErrorMessage = "Something went wrong. Please contact our support team."
                 };
             }
-        }
+        }     
     }
 }
