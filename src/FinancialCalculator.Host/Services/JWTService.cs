@@ -28,7 +28,7 @@
 
         public string GenerateJSONWebToken(UserLoginRequestModel userInfo)
         {
-            UserModel user = userDataService.getFullUserByName(userInfo.Username).Result;
+                UserModel user = userDataService.getFullUserByName(userInfo.Username).Result;
             bool isProvidedPasswordCorrect = userDataService.isUserPasswordCorrect(user.Password, userInfo.Password);
 
             if (!isProvidedPasswordCorrect)

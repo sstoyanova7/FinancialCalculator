@@ -1,0 +1,17 @@
+.cards {
+    display: flex;
+    flex-direction: column;
+    padding-left: 2rem;
+
+}
+
+.card-item {
+    width: 330px;
+    height: 200px;
+    padding-right: 1rem;
+    float: right;
+}
+
+.extra {
+    float: right;
+}

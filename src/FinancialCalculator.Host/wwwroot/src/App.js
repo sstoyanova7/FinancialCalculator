@@ -4,31 +4,41 @@ import Navbar from "./Navbar";
 import CalculatorCredit from "./CalculatorCredit";
 import CalculatorLizing from "./CalculatorLizing";
 import CalculatorRefinance from "./CalculatorRefinance";
-import StatisticsOne from "./StatisticsOne";
-import StatisticsTwo from "./StatisticsTwo";
-import StatisticsThree from "./StatisticsThree";
+import CreditHistory from "./CreditHistory";
+import LeasingHistory from "./LeasingHistory";
+import RefinaneHistory from "./RefinaneHistory";
 import AboutUs from "./AboutUs";
 import Home from "./Home";
 import Calculators from "./Calculators";
+import axios from 'axios';
+import Logout from './Logout';
+import History from './History'
 
 class App extends React.Component {
   constructor(props) {
     super(props);
       this.state = {
           cookie: "",
-          userData: {
-              profileName: "goshko"
-          }
+          user: ""
     }
-
   }
 
-    loadCookie = () => {
+    loadCookie = (user) => {
         this.setState({
-            cookie: document.cookie
+            cookie: document.cookie,
+            user: user
         })
-
     }
+
+    onLogoutSubmit = () => {
+      axios({
+          method: "post",
+          url: "http://localhost:5000/api/Authentication/logout"
+      }).then(res => {
+        this.loadCookie();
+        
+      })
+  }
 
     componentDidMount() {
         if (document.cookie) {
@@ -43,25 +53,55 @@ class App extends React.Component {
     }
 
     render() {
-    
     return (
       <div>
         <Router>
-          <Route path="/" component={Navbar} />
+        <Route
+              path="/" 
+              render={(props) => (
+                  <Navbar {...props}  user={this.state.user} cookie={this.state.cookie}/>
+              )}
+            />
+          {/* <Route path="/" component={Navbar} cookie={this.state.cookie}/> */}
           <Switch>
             <Route path="/calculators/credit" exact component={CalculatorCredit} />
             <Route path="/calculators/lizing" exact component={CalculatorLizing} />
             <Route path="/calculators/refinance" exact component={CalculatorRefinance} />
-            <Route path="/calculators" exact component={Calculators} />
-            <Route path="/statistics/one" exact component={StatisticsOne} />
-            <Route path="/statistics/two" exact component={StatisticsTwo} />
-            <Route path="/statistics/three" exact component={StatisticsThree} />
-            <Route path="/about-us" exact component={AboutUs} />
+            
+            <Route path="/history/credit" exact component={CreditHistory} />
+            <Route path="/history/leasing" exact component={LeasingHistory} />
+            <Route path="/history/refinance" exact component={RefinaneHistory} />
+            <Route
+              path="/about-us" exact
+              render={(props) => (
+                  <AboutUs {...props} cookie={this.state.cookie} userName={this.state.user} logout={this.onLogoutSubmit}/>
+              )}
+            />
+             <Route
+              path="/history" exact
+              render={(props) => (
+                  <History {...props}/>
+              )}
+            />
+             <Route
+              path="/calculators" exact
+              render={(props) => (
+                  <Calculators {...props}/>
+              )}
+            />
+            <Route
+            
+              path="/logout" exact
+              render={(props) => (
+                  <Logout {...props} cookie={this.state.cookie} logout={this.onLogoutSubmit}/>
+              )}
+            />
+            {/* <Route path="/about-us" exact component={AboutUs} /> */}
             {/* <Route path="/" exact component={Home userInfo={5}} /> */}
             <Route
               path="/" exact
               render={(props) => (
-                  <Home {...props} userInfo={{ profileName: this.state.userData.profileName }} loadCookie={this.loadCookie }/>
+                  <Home {...props}  loadCookie={this.loadCookie }/>
               )}
             />
           </Switch>

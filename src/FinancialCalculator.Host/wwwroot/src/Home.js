@@ -2,6 +2,8 @@ import React from 'react';
 import './Pages.css';
 import './Navbar.css';
 import axios from 'axios';
+import TitleCss from '@ui5/webcomponents/dist/generated/themes/Title.css';
+import Calculators from './Calculators';
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -12,151 +14,101 @@ class Home extends React.Component {
             registerEmail: "",
             registerPassword: "",
             registerRepeatedPassword: "",
-            cookie: ""
+            cookie: "",
+            hasCookie: false
         };
         this.homeSubmitButton = React.createRef();
         this.homeLogout = React.createRef();
     }
 
     onLoginSubmit = () => {
-        console.log("majkaMUSHEBADAEBAMUHATADAEBA")
         const postInformation = {
             "username": `${this.state.loginUsername}`,
             "password": `${this.state.loginPassword}`
         }
-        console.log(postInformation);
         axios({
             method: "post",
             url: "http://localhost:5000/api/Authentication/sign-in",
-            data: { ...postInformation}
+            data: { ...postInformation }
         }).then(res => {
-            
-
             this.setState({
-                cookie: document.cookie
+                cookie: document.cookie,
+                hasCookie: true
             })
-            this.props.loadCookie();
+            this.props.loadCookie(this.state.loginUsername);
+            this.props.history.push(('/calculators'));
         }).catch(err => {
-          
             this.setState({
-                cookie: ""
+                cookie: "",
+                hasCookie: false
             })
         })
     }
 
     onInputChange = (event) => {
-        const { id, value } = event.target;
+        const { name, value } = event.target;
         this.setState({
-                [id]: value
+            [name]: value
         })
-
-        console.log(this.state.loginUsername, this.state.loginPassword);
-    }
-
-    onLogoutSubmit = () => {
-        axios({
-            method: "post",
-            url: "http://localhost:5000/api/Authentication/logout"
-        }).then(res => {
-            this.setState({
-                cookie: ""
-            })
-        })
-
-
-    }
-
-    addEventListeners() {
-        this.homeSubmitButton.current.addEventListener("click", this.onLoginSubmit);
-        this.homeLogout.current.addEventListener("click", this.onLogoutSubmit);
-        const inputs = document.querySelectorAll(".account-input", ".register-input");
-        const inputsArray = [...inputs];
-        
-        inputsArray.forEach(input => {
-            input.addEventListener("change", this.onInputChange);
-        });
     }
 
     componentDidMount() {
-        this.addEventListeners();
         if (document.cookie) {
             this.setState({
-                cookie: document.cookie
+                cookie: document.cookie,
+                hasCookie: true
             })
             this.props.loadCookie();
+            this.props.history.push(('/calculators'));
+
         } else {
             this.setState({
-                cookie: ""
-            })
-            this.removeEventListeners();
-            this.addEventListeners();
-        }
-    }
-    removeEventListeners() {
-        this.homeSubmitButton.current.removeEventListener("click", this.onLoginSubmit);
-        this.homeLogout.current.removeEventListener("click", this.onLogoutSubmit);
-        const inputs = document.querySelectorAll(".account-input", ".register-input");
-        const inputsArray = [...inputs];
+                cookie: "",
+                hasCookie: false
 
-        inputsArray.forEach(input => {
-            input.removeEventListener("change", this.onInputChange);
-        });
-    }
-    componentDidUpdate() {
-      
+            })
+        }
     }
 
     render() {
         return (
             <div>
-                {this.state.cookie !== "" ?
-                    <p>{"Здравей, " + this.state.trueUser + "!"}</p> :
- 
-                    <div className="container">
-                        <div className="account-form">
-                            <ui5-card heading="Вход" class="small">
-                                <div class="account-input">
-                                    <div className="account-input-username">
-                                        <ui5-input id="loginUsername" placeholder="Потребителско име" required></ui5-input>
-                                    </div>
-                                    <div className="account-input-password">
-                                        <ui5-input id="loginPassword" type="Password" placeholder="Парола" required></ui5-input>
-                                        <div className="text-input">
-                                            <a href="#">
-                                                <i>Забравена парола?</i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className="account-button-actions">
-                                        <ui5-button ref={this.homeSubmitButton} design="Emphasized">Вход</ui5-button>
-
-                                    </div>
+                <div className="container">
+                    <div className="form-wrapper">
+                        <div className="form">
+                        <h3 className="entry">Вход</h3>
+                            <form>   
+                                <div className="login-username">
+                                    <input type="text" name="loginUsername" value={this.state.loginUsername} onChange={this.onInputChange} placeholder="Потребителско име" />
                                 </div>
-                            </ui5-card>
-                        </div>
-                        <div className="register-form">
-                            <ui5-card heading="Регистрация" class="small">
-                                <div className="register-input">
-                                    <div className="register-input-username">
-                                        <ui5-input id="sign-username" placeholder="Потребителско име" required></ui5-input>
-                                    </div>
-                                    <div className="register-input-email">
-                                        <ui5-input id="register-email" placeholder="Имейл адрес" required></ui5-input>
-                                    </div>
-                                    <div className="register-input-password">
-                                        <ui5-input id="register-password" type="Password" placeholder="Парола" required></ui5-input>
-                                    </div>
-                                    <div className="register-input-confirm-password">
-                                        <ui5-input id="register-confirm-password" type="Password" placeholder="Потвърдете паролата" required></ui5-input>
-                                    </div>
-                                    <div className="account-button-actions">
-                                        <ui5-button ref={this.calculateLeasingButtonRef} design="Emphasized">Регистрация</ui5-button>
-                                    </div>
+                                <div className="login-password">
+                                    <input type="password" name="loginPassword" value={this.state.loginPassword} onChange={this.onInputChange} placeholder="Парола" />
+                                    <div className="text-input"><a href="#"><i>Забравена парола?</i></a></div>
                                 </div>
-                            </ui5-card>
+                                <ui5-button onClick={this.onLoginSubmit} design="Emphasized">Вход</ui5-button>
+                            </form>
                         </div>
-                    </div> }
-                <ui5-button ref={this.homeLogout} design="Emphasized">Изход</ui5-button>
+                        
+                        <div className="form">
+                        <h3>Регистрация</h3>
+                            <form>
+                            <div className="register-username">
+                                <input type="text" name="registerUsername" value={this.state.registerUsername} onChange={this.onInputChange} placeholder="Потребителско име" />
+                            </div>
+                            <div className="register-email">
+                                <input type="email" name="registerEmail" value={this.state.registerEmail} onChange={this.onInputChange} placeholder="Имейл" />
+                            </div>
+                            <div className="register-password">
+                                <input type="password" name="registerPassword" value={this.state.registerPassword} onChange={this.onInputChange} placeholder="Парола" />
+                            </div>
+                            <div className="register-repeated-password">
+                                <input type="password" name="registerRepeatedPassword" value={this.state.registerRepeatedPassword} onChange={this.onInputChange} placeholder="Повторете паролата" />
+                            </div>
+                                <ui5-button design="Emphasized">Регистрация</ui5-button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

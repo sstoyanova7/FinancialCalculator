@@ -1,54 +1,55 @@
 import React from 'react';
 import './Calculators.css';
-import "@ui5/webcomponents/dist/Card";
-class Calculators extends React.Component {
+
+class History extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    onCreditClick = () => {
-        this.props.history.push(('/calculators/credit'));
+    onCreditHistoryClick = () => {
+        this.props.history.push(('/history/credit'))
     }
-    onLeaseClick = () => {
-        this.props.history.push(('/calculators/lizing'));
+    onRefinanceHistoryClick = () => {
+        this.props.history.push(('/history/refinance'))
     }
-    onRefinanceClick = () => {
-        this.props.history.push(('/calculators/refinance'));
+    onLeaseHistoryClick = () => {
+        this.props.history.push(('/history/leasing'))
     }
-    
+
     render() {
         return (
             <div>
                 <div className="container">
                     <div className="card-wrapper">
                         <div className="card">
-                            <h2 className="heading">Кредитен калкулатор</h2>
+                            <h2 className="heading">Кредитна история</h2>
                             <p className="description">
+                                {/* какво да се напише в картичките */}
                                 Универсален кредитен калкулатор. Изчислява всички параметри на един кредит:
                                 месечна вноска, размер на кредита, годишна лихва, годишен процент на разходите, срок на кредита, максимален възможен размер на кредит.
                             </p>
                             <div className="button">
-                            <ui5-button onClick={this.onCreditClick}design="Emphasized">Към калкулатора</ui5-button>
+                            <ui5-button onClick={this.onCreditHistoryClick}design="Emphasized">Към Кредитна История</ui5-button>
                             </div>
                         </div>
                         <div className="card">
-                            <h2 className="heading">Калкулатор за рефинансиране</h2>
+                            <h2 className="heading">История на рефинансиране</h2>
                             <p className="description">
                                 C пoмoщтa нa ĸaлĸyлaтopa зa peфинaнcиpaнe нa ĸpeдити мoжeтe дa изчиcлитe ĸoлĸo биxтe cпecтили/изгyбили,
                                 aĸo peшитe дa peфинaнcиpaтe, т.e. дa изтeглитe нoв ĸpeдит, зa дa пoгacитe cтapo ĸpeдитнo зaдължeниe.
                              </p>
                             <div className="button">
-                            <ui5-button onClick={this.onRefinanceClick} design="Emphasized">Към калкулатора</ui5-button>
+                            <ui5-button onClick={this.onRefinanceHistoryClick} design="Emphasized">Към история на рефинансиране</ui5-button>
                             </div>
                         </div>
                         <div className="card">
-                            <h2 className="heading">Лизингов калкулатор</h2>
+                            <h2 className="heading">Лизингова история</h2>
                             <p className="description">
                                 Целта на ГПР Калкулатора за кредити е да Ви помогне да изчислите истинската цена на дадена кредитна оферта.
                                 Колкото по-изгодна е дадена оферта, толкова по-ниски са ГПР и Общо погасената сума. 
                               </p>
                               <div className="button">
-                            <ui5-button onClick={this.onLeaseClick} design="Emphasized">Към калкулатора</ui5-button>
+                            <ui5-button onClick={this.onLeaseHistoryClick} design="Emphasized">Към лизингова история</ui5-button>
                             </div>
                         </div>
                     </div>
@@ -58,4 +59,4 @@ class Calculators extends React.Component {
     }
 }
 
-export default Calculators;
+export default History;

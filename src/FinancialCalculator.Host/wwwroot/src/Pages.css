@@ -68,70 +68,71 @@ a {
 
 
 /* Home - Login/Register Forms */
+
 .container {
-    display: flex;
-    max-width: 1100px;
-    max-height: 700px;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.account-form {
-    height: 500px;
-    display: flex;
+    padding: 5rem;
+    display:flex;
     justify-content: center;
-    align-items: center;
 }
 
-.account-input {
-    width: 350px;
-    height: 250px;
-    margin-top: 2rem;
+.form-wrapper {
+    width:70%;
+    height:400px;
     display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.form {
+    box-shadow: 10px 5px #555;
+    width:350px;
+    height:350px;
+    display:flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    margin:1rem;
+    border: 2px solid #666;
 }
 
-.account-input-username {
-    margin-bottom: -1.5rem;
+.entry {
+    margin-top:3rem;
+    margin-bottom:-2rem;
+}
+form {
+    margin-top:-1rem;
+    height:300px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+.form input {
+    padding:0.5rem;
+    margin-top:1rem;
+}
+
+.register-repeated-password {
+    margin-bottom:1rem;
+}
+
+h3 {
+    font-family: "Roboto", sans-serif;
+    margin-top:1rem;
+    font-size: 1.5rem;
 }
 
 .text-input {
-    margin-top: 0.5rem;
-}
-
-.account-button-actions {
-    margin-top: -2rem;
-    display: flex;
-    flex-direction: column;
-    width: 40%;
-    justify-content: center;
+    margin-bottom:1rem;
+    margin-top:0.25rem;
 }
 
 *:focus {
     outline: none;
 }
 
-
-.register-input {
-    width: 350px;
-    height: 250px;
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.register-input-username,
-.register-input-password,
-.register-input-confirm-password,
-.register-input-email {
-    margin-top: -2rem;
-}
-
-
+/*  */
 
 .starting-fees {
     display: flex;
@@ -151,7 +152,7 @@ a {
 #annualManagementFeeValueType,
 #monthlyManagementFeeValueType {
     position: absolute;
-    top: 54px;
+    top: 17px;
     left: 170px;
     width: 40px;
     height: 36px;
@@ -223,18 +224,34 @@ a {
     align-items: center;
 }
 
-    .credit-calculator-go-to > a {
-        margin-top: 1rem;
-        background: #305aff;
-        padding: 0.5rem;
-        width: 7rem;
-        border-radius: 5px;
-        color: #fff;
-        color: #fff;
-        transition: 0.6s;
-    }
+.credit-calculator-go-to > a {
+    margin-top: 1rem;
+    background: #305aff;
+    padding: 0.5rem;
+    width: 7rem;
+    border-radius: 5px;
+    color: #fff;
+    color: #fff;
+    transition: 0.6s;
+}
 
-        .credit-calculator-go-to > a:hover {
-            color: #fff;
-            background-color: #0028c7;
-        }
+.credit-calculator-go-to > a:hover {
+    color: #fff;
+    background-color: #0028c7;
+}
+
+.tables-credit {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    
+}
+
+.upper-table {
+    width:1000px;
+    margin-bottom:1rem;
+}
+
+.new-credit-calculation {
+    margin-top:1.5rem;
+}
