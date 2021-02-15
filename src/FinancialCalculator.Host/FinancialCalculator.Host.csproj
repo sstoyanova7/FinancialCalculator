@@ -33,13 +33,10 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.11" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FinancialCalculator.DAL\FinancialCalculator.DAL.csproj" />
     <ProjectReference Include="..\FinancialCalculator.BL\FinancialCalculator.BL.csproj" />
-    <ProjectReference Include="..\FinancialCalculator.Models\FinancialCalculator.Models.csproj" />
   </ItemGroup>
 
 	<Target Name="DebugRunWebpack" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug' And !Exists('$(ScriptsDist)')">

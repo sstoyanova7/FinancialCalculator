@@ -7,22 +7,32 @@
     using Serilog;
     using System.Net;
     using FinancialCalculator.BL.Validation;
+    using Microsoft.AspNetCore.Http;
 
     public class LeasingLoanCalculatorService : ICalculatorService<LeasingLoanResponseModel, LeasingLoanRequestModel>
     {
 
         private readonly ILogger _logger;
         private IValidator<LeasingLoanRequestModel> _leasingLoanValidator;
+        private readonly IJWTService _jWTService;
+        private readonly IRequestHistoryDataService _requestHistoryDataService;
 
         public LeasingLoanCalculatorService(ILogger logger,
-            IValidator<LeasingLoanRequestModel> leasingLoanValidator)
+            IValidator<LeasingLoanRequestModel> leasingLoanValidator,
+            IJWTService jWTService,
+            IRequestHistoryDataService requestHistoryDataService)
         {
             _logger = logger.ForContext<LeasingLoanCalculatorService>();
             _leasingLoanValidator = leasingLoanValidator;
+            _jWTService = jWTService;
+            _requestHistoryDataService = requestHistoryDataService;
         }
 
-        public LeasingLoanResponseModel Calculate(LeasingLoanRequestModel requestModel)
+        public LeasingLoanResponseModel Calculate(LeasingLoanRequestModel requestModel, string cookieValue)
         {
+            RequestHistoryResponseModel requestHistory = null;
+            _requestHistoryDataService.SetRequestHistoryValues(requestHistory, cookieValue, "leasing");
+
             var validated = _leasingLoanValidator.Validate(requestModel);
             if (!validated.IsValid)
             {
@@ -49,13 +59,23 @@
                         ErrorMessage = "You cannot have a leasing loan with these parameters."
                     };
                 }
-                return new LeasingLoanResponseModel
+
+                LeasingLoanResponseModel leasingLoanResponse = new LeasingLoanResponseModel
                 {
                     Status = HttpStatusCode.OK,
                     //AnnualPercentCost
                     TotalCost = totalCost,
                     TotalFees = totalFees
                 };
+
+                if (requestHistory != null)
+                {
+                    requestHistory.Calculation_Result = leasingLoanResponse.ToString();
+                    requestHistory.User_Agent = requestModel.UserAgent;
+                    _requestHistoryDataService.insertRequest(requestHistory);
+                }
+
+                return leasingLoanResponse;
             }
             catch (Exception ex)
             {

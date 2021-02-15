@@ -1,6 +1,7 @@
-﻿namespace FinancialCalculator.Host.Services
+﻿namespace FinancialCalculator.BL.Services
 {
-    using FinancialCalculator.DAL.Configuration.Database;
+    using FinancialCalculator.BL.Configuration.Database;
+    using FinancialCalculator.Services;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 

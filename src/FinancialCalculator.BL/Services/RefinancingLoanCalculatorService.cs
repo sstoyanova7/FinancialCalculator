@@ -10,6 +10,7 @@
     using Serilog;
     using System.Net;
     using FinancialCalculator.BL.Validation;
+    using Microsoft.AspNetCore.Http;
 
     public class RefinancingLoanCalculatorService : ICalculatorService<RefinancingLoanResponseModel, RefinancingLoanRequestModel>
     {
@@ -17,18 +18,27 @@
         private readonly ILogger _logger;
         private IValidator<RefinancingLoanRequestModel> _refinancingLoanValidator;
         private ICalculatorService<NewLoanResponseModel, NewLoanRequestModel> _newLoanService;
+        private readonly IJWTService _jWTService;
+        private readonly IRequestHistoryDataService _requestHistoryDataService;
 
         public RefinancingLoanCalculatorService(ILogger logger,
             IValidator<RefinancingLoanRequestModel> refinancingLoanValidator,
-            ICalculatorService<NewLoanResponseModel, NewLoanRequestModel> newLoanService)
+            ICalculatorService<NewLoanResponseModel, NewLoanRequestModel> newLoanService,
+            IJWTService jWTService,
+            IRequestHistoryDataService requestHistoryDataService)
         {
             _logger = logger.ForContext<RefinancingLoanCalculatorService>();
             _refinancingLoanValidator = refinancingLoanValidator;
             _newLoanService = newLoanService;
+            _jWTService = jWTService;
+            _requestHistoryDataService = requestHistoryDataService;
         }
        
-        public RefinancingLoanResponseModel Calculate(RefinancingLoanRequestModel requestModel)
+        public RefinancingLoanResponseModel Calculate(RefinancingLoanRequestModel requestModel, String cookieValue)
         {
+            RequestHistoryResponseModel requestHistory = null;
+            _requestHistoryDataService.SetRequestHistoryValues(requestHistory, cookieValue, "refinance");
+
             var validated = _refinancingLoanValidator.Validate(requestModel);
             if (!validated.IsValid)
             {
@@ -83,14 +93,13 @@
                         }
                 }).ToList();
 
-
-
                 var monthlyInstallmentNewLoan = newPlan.First(x => x.Id == 1).MonthlyInstallment;
                 var totalCostNewLoan = periodLeft * monthlyInstallmentNewLoan + earlyInstallmentsFeeInCurrency
                         + requestModel.StartingFeesCurrency + requestModel.StartingFeesPercent
                         + CalcHelpers.GetFeeCost(requestModel.StartingFeesPercent, moneyLeftToBePaid);
 
-                return new RefinancingLoanResponseModel
+
+                RefinancingLoanResponseModel refinancingLoanResponse = new RefinancingLoanResponseModel
                 {
                     Status = HttpStatusCode.OK,
                     CurrentLoan = new RefinancingLoanHelperModel
@@ -109,6 +118,15 @@
                         Total = totalCostNewLoan
                     }
                 };
+
+                if (requestHistory != null)
+                {
+                    requestHistory.Calculation_Result = refinancingLoanResponse.ToString();
+                    requestHistory.User_Agent = requestModel.UserAgent;
+                    _requestHistoryDataService.insertRequest(requestHistory);
+                }
+
+                return refinancingLoanResponse;
             }
             catch (Exception ex)
             {

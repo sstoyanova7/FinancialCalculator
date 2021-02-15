@@ -14,13 +14,17 @@ namespace Tests
         private ICalculatorService<LeasingLoanResponseModel, LeasingLoanRequestModel> _service;
         private Mock<Serilog.ILogger> _logger;
         private Mock<IValidator<LeasingLoanRequestModel>> _leasingLoanValidator;
+        private Mock<IJWTService> _jWTService;
+        private Mock<IRequestHistoryDataService> _requestHistoryDataService;
 
         [SetUp]
         public void Setup()
         {
             _logger = new Mock<Serilog.ILogger>();
-            _leasingLoanValidator = SetupHelper.CreateValidatorGeneric<LeasingLoanRequestModel>();          
-            _service = new LeasingLoanCalculatorService(_logger.Object, _leasingLoanValidator.Object);
+            _leasingLoanValidator = SetupHelper.CreateValidatorGeneric<LeasingLoanRequestModel>();
+            _jWTService = new Mock<IJWTService>();
+            _requestHistoryDataService = new Mock<IRequestHistoryDataService>();
+            _service = new LeasingLoanCalculatorService(_logger.Object, _leasingLoanValidator.Object, _jWTService.Object, _requestHistoryDataService.Object);
         }
 
         [Test]
@@ -33,7 +37,7 @@ namespace Tests
                 Period = 25,
                 MonthlyInstallment = 10
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new LeasingLoanResponseModel
             {
@@ -63,7 +67,7 @@ namespace Tests
                     Value = 2
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new LeasingLoanResponseModel
             {
@@ -93,7 +97,7 @@ namespace Tests
                     Value = 2
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new LeasingLoanResponseModel
             {
@@ -117,7 +121,7 @@ namespace Tests
                 Period = 25,
                 MonthlyInstallment = 1,
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new LeasingLoanResponseModel
             {

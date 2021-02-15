@@ -1,5 +1,6 @@
 ﻿namespace FinancialCalculator.Models.ResponseModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Net;
 
@@ -27,6 +28,12 @@
                 && InstallmentsCost == b.InstallmentsCost;
                 //&& RepaymentPlan.All(x => b.RepaymentPlan.Any(y => x .Equals(y)))
                 //&& b.RepaymentPlan.All(x => RepaymentPlan.Any(y => x.Equals(y)));                
+        }
+
+        public override string ToString()
+        {
+            return String.Format("TotalCost: {0}, FeesCost: {1}, InterestsCost: {2}, InstallmentsCost: {3}, AnnualPercentCost: {4}",
+                                TotalCost, FeesCost, InterestsCost, InstallmentsCost, AnnualPercentCost);
         }
     }
 }

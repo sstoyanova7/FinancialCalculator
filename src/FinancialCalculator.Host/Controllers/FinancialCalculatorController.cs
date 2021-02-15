@@ -27,7 +27,8 @@
         [Route("api/calculateNewLoan")]
         public NewLoanResponseModel CalculateNewLoan([FromBody] NewLoanRequestModel requestModel)
         {
-            return _newLoanService.Calculate(requestModel);
+            string cookieValue = Request.Cookies["Auth-Tst"];
+            return _newLoanService.Calculate(requestModel, cookieValue);
         }
 
 
@@ -35,14 +36,16 @@
         [Route("api/calculateRefinancingLoan")]
         public RefinancingLoanResponseModel CalculateRefinancingLoan([FromBody] RefinancingLoanRequestModel requestModel)
         {
-            return _refinancingLoanService.Calculate(requestModel);
+            string cookieValue = Request.Cookies["Auth-Tst"];
+            return _refinancingLoanService.Calculate(requestModel, cookieValue);
         }
 
         [HttpPost]
         [Route("api/calculateLeasingLoan")]
         public LeasingLoanResponseModel CalculateLeasingLoan([FromBody] LeasingLoanRequestModel requestModel)
         {
-            return _leasingLoanService.Calculate(requestModel);
+            string cookieValue = Request.Cookies["Auth-Tst"];
+            return _leasingLoanService.Calculate(requestModel, cookieValue);
         }
     }
 }

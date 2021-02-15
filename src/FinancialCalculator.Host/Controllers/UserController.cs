@@ -1,12 +1,12 @@
 ﻿namespace FinancialCalculator.Host.Controllers
 {
-    using FinancialCalculator.Host.Services;
     using FinancialCalculator.Models.RequestModels;
+    using FinancialCalculator.Services;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
 
     [ApiController]
-    [Route("api/[controller]s/")]
+    [Route("api/[controller]/")]
     public class UserController : ControllerBase
     {
         private readonly IUserDataService userDataService;
@@ -29,13 +29,6 @@
         public List<UserRequestModel> GetAllUsers()
         {
             return userDataService.getAllUsers().Result;
-        }
-
-        [HttpPost]
-        [Route("")]
-        public void InsertUser([FromBody] UserCreateRequestModel user)
-        {
-            userDataService.insertUser(user);
         }
 
         [HttpDelete]

@@ -1,8 +1,8 @@
 namespace FinancialCalculatorFE
 {
     using System.Text;
+    using FinancialCalculator.BL.Services;
     using FinancialCalculator.BL.Validation;
-    using FinancialCalculator.Host.Services;
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Models.ResponseModels;
     using FinancialCalculator.Services;
@@ -50,6 +50,7 @@ namespace FinancialCalculatorFE
             services.AddSingleton<IValidator<RefinancingLoanRequestModel>, RefinancingLoanRequestValidator>();
             services.AddSingleton<IValidator<LeasingLoanRequestModel>, LeasingLoanRequestValidator>();
             services.AddTransient<IJWTService, JWTService>();
+            services.AddTransient<IRequestHistoryDataService, RequestHistoryDataService>();
 
         }
 

@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialCalculator.DAL.Configuration.Database
+namespace FinancialCalculator.BL.Configuration.Database
 {
     public class SqlConnectionFactory : IDatabaseConnectionFactory
     {
