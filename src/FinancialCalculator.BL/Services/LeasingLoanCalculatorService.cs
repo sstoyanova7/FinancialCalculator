@@ -11,7 +11,6 @@
 
     public class LeasingLoanCalculatorService : ICalculatorService<LeasingLoanResponseModel, LeasingLoanRequestModel>
     {
-
         private readonly ILogger _logger;
         private IValidator<LeasingLoanRequestModel> _leasingLoanValidator;
         private readonly IJWTService _jWTService;
@@ -77,7 +76,7 @@
 
                 if (requestHistory != null)
                 {
-                    requestHistory.Calculation_Result = leasingLoanResponse.ToString();
+                    requestHistory.Calculation_Result = "Input: " + requestModel.ToString().Trim() + " Result: " + leasingLoanResponse.ToString().Trim();
                     requestHistory.User_Agent = requestModel.UserAgent;
                     _requestHistoryDataService.insertRequest(requestHistory);
                 }

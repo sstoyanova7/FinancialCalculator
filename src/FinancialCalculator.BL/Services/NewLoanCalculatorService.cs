@@ -14,12 +14,10 @@
 
     public class NewLoanCalculatorService : ICalculatorService<NewLoanResponseModel, NewLoanRequestModel>
     {
-
         private readonly ILogger _logger;
         private IValidator<NewLoanRequestModel> _newLoanValidator;
         private readonly IJWTService _jWTService;
         private readonly IRequestHistoryDataService _requestHistoryDataService;
-
 
         public NewLoanCalculatorService(ILogger logger,
             IValidator<NewLoanRequestModel> newLoanValidator,
@@ -80,7 +78,7 @@
 
                 if (requestHistory != null)
                 {
-                    requestHistory.Calculation_Result = newLoanResponse.ToString();
+                    requestHistory.Calculation_Result = "Input:" + requestModel.ToString().Trim() + "Result: " + newLoanResponse.ToString().Trim();
                     requestHistory.User_Agent = requestModel.UserAgent;
                     _requestHistoryDataService.insertRequest(requestHistory);
                 }

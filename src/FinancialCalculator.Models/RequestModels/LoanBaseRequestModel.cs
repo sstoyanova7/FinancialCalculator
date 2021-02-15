@@ -6,5 +6,10 @@
         public decimal LoanAmount { get; set; }
         public int Period { get; set; } //in months
         public decimal Interest { get; set; } //in percent
+
+        public override string ToString()
+        {
+            return $"LoanAmount: {LoanAmount}, Period: {Period} months, Interest: {Interest} %, UserAgent: {UserAgent}";
+        }
     }
 }

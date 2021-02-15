@@ -8,5 +8,9 @@
         public decimal StartingFeesCurrency { get; set; }
         public decimal StartingFeesPercent { get; set; }
 
+        public override string ToString()
+        {
+            return $"CountOfPaidInstallments: {CountOfPaidInstallments}, EarlyInstallmentsFee: {EarlyInstallmentsFee}% , NewInterest: {NewInterest}%, StartingFeesCurrency: {StartingFeesCurrency}, StartingFeesPercent: {StartingFeesPercent}";
+        }
     }
 }

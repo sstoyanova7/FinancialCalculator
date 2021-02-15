@@ -127,8 +127,8 @@
                 };
 
                 if (requestHistory != null)
-                {
-                    requestHistory.Calculation_Result = refinancingLoanResponse.ToString();
+               {
+                    requestHistory.Calculation_Result = "Input: " + requestModel.ToString().Trim() + "Result: " + refinancingLoanResponse.ToString().Trim();
                     requestHistory.User_Agent = requestModel.UserAgent;
                     _requestHistoryDataService.insertRequest(requestHistory);
                 }

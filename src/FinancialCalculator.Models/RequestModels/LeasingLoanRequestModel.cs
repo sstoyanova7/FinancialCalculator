@@ -13,9 +13,16 @@
 
         public override string ToString()
         {
-            var feeValueTypeStr = StartingFee.ValueType == FeeValueType.Percent ? "%" : "lv";
-            return @$"ProductPrice: {ProductPrice}, StartingInstallment: {StartingInstallment}, Period: {Period} months, 
-                        MonthlyInstallment: {MonthlyInstallment}, StartingFee: {StartingFee.Value} {feeValueTypeStr}";
+            string feeValueTypeStr = null;
+            if (StartingFee != null)
+            {
+                feeValueTypeStr = StartingFee.ValueType == FeeValueType.Percent ? "%" : "lv";
+                return @$"ProductPrice: {ProductPrice}, StartingInstallment: {StartingInstallment}, Period: {Period} months, MonthlyInstallment: {MonthlyInstallment}, StartingFee: {StartingFee.Value} {feeValueTypeStr}";
+            } else
+            {
+                return @$"ProductPrice: {ProductPrice}, StartingInstallment: {StartingInstallment}, Period: {Period} months, MonthlyInstallment: {MonthlyInstallment}";
+            }
+
         }
     }
 }
