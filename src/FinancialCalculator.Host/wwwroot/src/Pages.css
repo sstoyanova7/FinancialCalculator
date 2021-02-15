@@ -255,3 +255,49 @@ h3 {
 .new-credit-calculation {
     margin-top:1.5rem;
 }
+
+
+/* History */
+
+/* Leasing History */
+
+.data-wrapper {
+   
+    margin: 0 2rem;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.data {
+    flex:40%;
+    border: 2px solid #000;
+    height: 300px;
+    margin:0.5rem;
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.data-info {
+    margin-bottom:1.25rem;
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    border-bottom: 2px solid #000;
+}
+
+.data-info:last-child {
+    border: none;
+}
+.data-text {
+    font-size: 1rem;
+    margin-bottom:0.5rem;
+
+}
+
+.heading-m {
+    font-size: 1.25rem;
+}
+
