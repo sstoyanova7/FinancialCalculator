@@ -91,6 +91,7 @@ class CalculatorCredit extends React.Component {
     // }
 
     inputsOnChange = (event) => {
+        const {id , value} = event.target;
         this.setState({
             [id]: value
         })
