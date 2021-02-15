@@ -58,7 +58,7 @@
             }
             validateString(user.Username, "Username must between " + _minCharValidationUsername + " and " + _maxCharValidationUsername + " symbols!");
             validateString(user.Username, "Password must between " + _minCharValidationPassword + " and " + _maxCharValidationPassword + " symbols!");
-            if (!user.Password.Equals(user.ConfirmPassowrd))
+            if (!user.Password.Contains(user.Password2))
             {
                 throw new Exception("Entered Password and Confirm password do not match");
             }
