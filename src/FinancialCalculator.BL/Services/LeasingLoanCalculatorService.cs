@@ -31,7 +31,14 @@
         public LeasingLoanResponseModel Calculate(LeasingLoanRequestModel requestModel, string cookieValue)
         {
             RequestHistoryResponseModel requestHistory = null;
-            _requestHistoryDataService.SetRequestHistoryValues(requestHistory, cookieValue, "leasing");
+            if (cookieValue != null)
+            {
+                UserRequestModel user = _jWTService.decodeJWTAsync(cookieValue).Result;
+                requestHistory = new RequestHistoryResponseModel();
+                requestHistory.Request_Time = DateTime.Now;
+                requestHistory.Calculator_Type = "leasing";
+                requestHistory.User = user;
+            }
 
             var validated = _leasingLoanValidator.Validate(requestModel);
             if (!validated.IsValid)

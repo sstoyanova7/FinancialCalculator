@@ -37,7 +37,14 @@
         public RefinancingLoanResponseModel Calculate(RefinancingLoanRequestModel requestModel, String cookieValue)
         {
             RequestHistoryResponseModel requestHistory = null;
-            _requestHistoryDataService.SetRequestHistoryValues(requestHistory, cookieValue, "refinance");
+            if (cookieValue != null)
+            {
+                UserRequestModel user = _jWTService.decodeJWTAsync(cookieValue).Result;
+                requestHistory = new RequestHistoryResponseModel();
+                requestHistory.Request_Time = DateTime.Now;
+                requestHistory.Calculator_Type = "refinance";
+                requestHistory.User = user;
+            }
 
             var validated = _refinancingLoanValidator.Validate(requestModel);
             if (!validated.IsValid)

@@ -35,7 +35,14 @@
         public NewLoanResponseModel Calculate (NewLoanRequestModel requestModel, String cookieValue)
         {
             RequestHistoryResponseModel requestHistory = null;
-            _requestHistoryDataService.SetRequestHistoryValues(requestHistory, cookieValue, "credit");
+            if (cookieValue != null)
+            {
+                UserRequestModel user = _jWTService.decodeJWTAsync(cookieValue).Result;
+                requestHistory = new RequestHistoryResponseModel();
+                requestHistory.Request_Time = DateTime.Now;
+                requestHistory.Calculator_Type = "credit";
+                requestHistory.User = user;
+            }
 
             var validated = _newLoanValidator.Validate(requestModel);
             if (!validated.IsValid)
