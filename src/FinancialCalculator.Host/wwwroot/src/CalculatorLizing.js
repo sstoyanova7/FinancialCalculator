@@ -127,7 +127,6 @@ class CalculatorLizing extends React.Component {
             } else {
                 sBrowser = "unknown";
             }
-            console.log(sBrowser);
             let postInformation = {};
             if (!this.state.startingFee) {
                 postInformation = {
@@ -151,7 +150,6 @@ class CalculatorLizing extends React.Component {
                     }
                 }
             }
-            console.log(postInformation);
             axios({
                 method: 'post',
                 url: '/FinancialCalculator/api/calculateLeasingLoan',
