@@ -1,4 +1,4 @@
-﻿namespace FinancialCalculator.Host.Services
+﻿namespace FinancialCalculator.Services
 {
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Models.ResponseModels;
@@ -9,7 +9,9 @@
     {
         Task<UserRequestModel> getUserById(long id);
 
-        void insertUser(UserCreateRequestModel user);
+        Task<UserRequestModel> getUserByName(string name);
+
+        Task<int> InsertUser(UserCreateRequestModel user);
 
         void deleteUserById(long id);
 

@@ -4,7 +4,7 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialCalculator.DAL.Configuration.Database
+namespace FinancialCalculator.BL.Configuration.Database
 {
     public interface IDatabaseConnectionFactory
     {

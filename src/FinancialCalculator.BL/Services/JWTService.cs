@@ -1,7 +1,8 @@
-﻿namespace FinancialCalculator.Host.Services
+﻿namespace FinancialCalculator.BL.Services
 {
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Models.ResponseModels;
+    using FinancialCalculator.Services;
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
     using Serilog;
@@ -10,6 +11,7 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Text;
+    using System.Threading.Tasks;
 
     public class JWTService : IJWTService
     {
@@ -55,11 +57,11 @@
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async void decodeJWT(string jwt)
+        public async Task<UserRequestModel> decodeJWTAsync(string jwt)
         {
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadToken(jwt) as JwtSecurityToken;
-            var email = jwtToken.Claims.First(claim => claim.Type == "Email").Value;
+            var email = jwtToken.Claims.First(claim => claim.Type == "email").Value;
             var subject = jwtToken.Claims.First(claim => claim.Type == "sub").Value;
 
             bool isUserExisting = await userDataService.isUserExisting(subject, email);
@@ -68,6 +70,8 @@
             {
                 throw new Exception();
             }
+            UserRequestModel user = userDataService.getUserByName(subject).Result;
+            return user;
         }
     }
 }

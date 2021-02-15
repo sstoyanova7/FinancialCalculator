@@ -1,5 +1,6 @@
 ﻿namespace FinancialCalculator.Models.ResponseModels
 {
+    using System;
     using System.Net;
 
     public class RefinancingLoanResponseModel
@@ -21,6 +22,11 @@
                 && NewLoan.Equals(b.NewLoan)
                 && MonthlySavings == b.MonthlySavings
                 && TotalSavings == b.TotalSavings;
+        }
+        public override string ToString()
+        {
+            return String.Format("MonthlySavings: {0}, TotalSavings: {1}, CurrentLoan: {2}, NewLoan: {3}",
+                                MonthlySavings, TotalSavings, CurrentLoan, NewLoan);
         }
     }
 }

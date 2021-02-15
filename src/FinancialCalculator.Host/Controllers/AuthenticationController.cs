@@ -1,25 +1,27 @@
 ﻿namespace FinancialCalculator.Host.Controllers
 {
-    using FinancialCalculator.Host.Services;
     using FinancialCalculator.Models.RequestModels;
+    using FinancialCalculator.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using System;
+    using System.Threading.Tasks;
 
     [ApiController]
     [Route("api/[controller]/")]
     public class AuthenticationController : ControllerBase
     {
         private IConfiguration _config;
+        private readonly IJWTService _jWTService;
+        private readonly IUserDataService _userDataService;
 
-        private readonly IJWTService jWTService;
-
-        public AuthenticationController(IConfiguration config, IJWTService service)
+        public AuthenticationController(IConfiguration config, IJWTService service, IUserDataService userDataService)
         {
             this._config = config;
-            jWTService = service;
+            _jWTService = service;
+            _userDataService = userDataService;
         }
 
         [AllowAnonymous]
@@ -27,7 +29,7 @@
         [Route("sign-in")]
         public IActionResult Login([FromBody] UserLoginRequestModel login)
         {
-            string jwt = jWTService.GenerateJSONWebToken(login);
+            string jwt = _jWTService.GenerateJSONWebToken(login);
 
             CookieOptions cookieOptions = new CookieOptions();
             cookieOptions.Expires = DateTime.Now.AddMinutes(120);
@@ -50,6 +52,14 @@
             }
             IActionResult response = Ok();
             return response;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("sign-up")]
+        public async Task InsertUserAsync([FromBody] UserCreateRequestModel user)
+        {
+            await Task.Run(() => _userDataService.InsertUser(user));
         }
     }
 }

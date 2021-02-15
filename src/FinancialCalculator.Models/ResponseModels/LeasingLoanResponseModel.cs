@@ -1,5 +1,6 @@
 ﻿namespace FinancialCalculator.Models.ResponseModels
 {
+    using System;
     using System.Net;
 
     public class LeasingLoanResponseModel
@@ -19,6 +20,11 @@
                 && AnnualPercentCost == b.AnnualPercentCost
                 && TotalCost == b.TotalCost
                 && TotalFees == b.TotalFees;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("TotalCost: {0}, TotalFees: {1}, AnnualPercentCost: {2}", TotalCost, TotalFees, AnnualPercentCost);
         }
     }
 }

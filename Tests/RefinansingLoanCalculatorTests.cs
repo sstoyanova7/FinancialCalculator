@@ -14,6 +14,8 @@ namespace Tests
         private Mock<Serilog.ILogger> _logger;
         private Mock<IValidator<RefinancingLoanRequestModel>> _refinancingLoanValidator;
         private Mock<IValidator<NewLoanRequestModel>> _newLoanValidator;
+        private Mock<IJWTService> _jWTService;
+        private Mock<IRequestHistoryDataService> _requestHistoryDataService;
 
         [SetUp]
         public void Setup()
@@ -21,9 +23,11 @@ namespace Tests
             _logger = new Mock<Serilog.ILogger>();
             _refinancingLoanValidator = SetupHelper.CreateValidatorGeneric<RefinancingLoanRequestModel>();
             _newLoanValidator = SetupHelper.CreateValidatorGeneric<NewLoanRequestModel>();
-            var _newLoanService = new NewLoanCalculatorService(_logger.Object, _newLoanValidator.Object);
+            _jWTService = new Mock<IJWTService>();
+            _requestHistoryDataService = new Mock<IRequestHistoryDataService>();
+            var _newLoanService = new NewLoanCalculatorService(_logger.Object, _newLoanValidator.Object, _jWTService.Object, _requestHistoryDataService.Object);
             
-            _service = new RefinancingLoanCalculatorService(_logger.Object, _refinancingLoanValidator.Object, _newLoanService);
+            _service = new RefinancingLoanCalculatorService(_logger.Object, _refinancingLoanValidator.Object, _newLoanService, _jWTService.Object, _requestHistoryDataService.Object);
         }       
 
         [Test]
@@ -40,7 +44,7 @@ namespace Tests
                 StartingFeesCurrency = 0,
                 StartingFeesPercent = 0
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new RefinancingLoanResponseModel
             {
@@ -84,7 +88,7 @@ namespace Tests
                 StartingFeesCurrency = 0,
                 StartingFeesPercent = 0
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new RefinancingLoanResponseModel
             {
@@ -128,7 +132,7 @@ namespace Tests
                 StartingFeesCurrency = 2,
                 StartingFeesPercent = 0
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new RefinancingLoanResponseModel
             {
@@ -171,7 +175,7 @@ namespace Tests
                 StartingFeesCurrency = 0,
                 StartingFeesPercent = 2
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new RefinancingLoanResponseModel
             {
@@ -214,7 +218,7 @@ namespace Tests
                 StartingFeesCurrency = 2,
                 StartingFeesPercent = 2
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new RefinancingLoanResponseModel
             {
@@ -257,7 +261,7 @@ namespace Tests
                 StartingFeesCurrency = 2,
                 StartingFeesPercent = 0
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new RefinancingLoanResponseModel
             {
@@ -300,7 +304,7 @@ namespace Tests
                 StartingFeesCurrency = 0,
                 StartingFeesPercent = 2
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new RefinancingLoanResponseModel
             {
@@ -343,7 +347,7 @@ namespace Tests
                 StartingFeesCurrency = 2,
                 StartingFeesPercent = 2
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new RefinancingLoanResponseModel
             {

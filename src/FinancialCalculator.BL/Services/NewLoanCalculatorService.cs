@@ -10,23 +10,33 @@
     using Serilog;
     using System.Net;
     using FinancialCalculator.BL.Validation;
+    using Microsoft.AspNetCore.Http;
 
     public class NewLoanCalculatorService : ICalculatorService<NewLoanResponseModel, NewLoanRequestModel>
     {
 
         private readonly ILogger _logger;
         private IValidator<NewLoanRequestModel> _newLoanValidator;
+        private readonly IJWTService _jWTService;
+        private readonly IRequestHistoryDataService _requestHistoryDataService;
 
 
         public NewLoanCalculatorService(ILogger logger,
-            IValidator<NewLoanRequestModel> newLoanValidator)
+            IValidator<NewLoanRequestModel> newLoanValidator,
+            IJWTService jWTService,
+            IRequestHistoryDataService requestHistoryDataService)
         {
             _logger = logger.ForContext<NewLoanCalculatorService>();
             _newLoanValidator = newLoanValidator;
+            _jWTService = jWTService;
+            _requestHistoryDataService = requestHistoryDataService;
         }
 
-        public NewLoanResponseModel Calculate (NewLoanRequestModel requestModel)
+        public NewLoanResponseModel Calculate (NewLoanRequestModel requestModel, String cookieValue)
         {
+            RequestHistoryResponseModel requestHistory = null;
+            _requestHistoryDataService.SetRequestHistoryValues(requestHistory, cookieValue, "credit");
+
             var validated = _newLoanValidator.Validate(requestModel);
             if (!validated.IsValid)
             {
@@ -41,7 +51,6 @@
 
             try
             {
-
                 var plan = requestModel.InstallmentType == Installments.AnnuityInstallment
                         ? CalcHelpers.GetAnuityPlan(requestModel).ToList()
                         : CalcHelpers.GetDecreasingPlan(requestModel).ToList();
@@ -49,7 +58,8 @@
                 var totalFeesCost = plan.Sum(x => x.Fees);
                 var totalMonthlyInstallmentsCost = plan.Sum(x => x.MonthlyInstallment);
                 var totalInterestCost = plan.Sum(x => x.InterestInstallment);
-                return new NewLoanResponseModel
+
+                NewLoanResponseModel newLoanResponse = new NewLoanResponseModel
                 {
                     Status = HttpStatusCode.OK,
                     //AnnualPercentCost = CalcHelpers.CalculateAPR(totalFeesCost, totalInterestCost, requestModel.LoanAmount, requestModel.Period),
@@ -60,6 +70,15 @@
                     InstallmentsCost = totalMonthlyInstallmentsCost,
                     RepaymentPlan = plan
                 };
+
+                if (requestHistory != null)
+                {
+                    requestHistory.Calculation_Result = newLoanResponse.ToString();
+                    requestHistory.User_Agent = requestModel.UserAgent;
+                    _requestHistoryDataService.insertRequest(requestHistory);
+                }
+
+                return newLoanResponse;
             }
             catch (Exception ex)
             {

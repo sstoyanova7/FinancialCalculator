@@ -15,13 +15,17 @@
         private ICalculatorService<NewLoanResponseModel, NewLoanRequestModel> _service;
         private Mock<Serilog.ILogger> _logger;
         private Mock<IValidator<NewLoanRequestModel>> _newLoanValidator;
+        private Mock<IJWTService> _jWTService;
+        private Mock<IRequestHistoryDataService> _requestHistoryDataService;
 
         [SetUp]
         public void Setup()
         {
             _logger = new Mock<Serilog.ILogger>();
             _newLoanValidator = SetupHelper.CreateValidatorGeneric<NewLoanRequestModel>();
-            _service = new NewLoanCalculatorService(_logger.Object, _newLoanValidator.Object);
+            _jWTService = new Mock<IJWTService>();
+            _requestHistoryDataService = new Mock<IRequestHistoryDataService>();
+            _service = new NewLoanCalculatorService(_logger.Object, _newLoanValidator.Object, _jWTService.Object, _requestHistoryDataService.Object);
         }
 
         [Test]
@@ -34,7 +38,7 @@
                Interest = 2,
                InstallmentType = Installments.AnnuityInstallment
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -60,7 +64,7 @@
                 Interest = 2,
                 InstallmentType = Installments.DecreasingInstallment
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -101,7 +105,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -142,7 +146,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -183,7 +187,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -224,7 +228,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -265,7 +269,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -306,7 +310,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -377,7 +381,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -448,7 +452,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -476,7 +480,7 @@
                 GracePeriod = 2
 
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -503,7 +507,7 @@
                 InstallmentType = Installments.DecreasingInstallment,
                 GracePeriod = 2
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -575,7 +579,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -647,7 +651,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -675,7 +679,7 @@
                 PromoPeriod = 2,
                 PromoInterest = 1
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -706,7 +710,7 @@
                 PromoPeriod = 2,
                 PromoInterest = 1
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -779,7 +783,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -856,7 +860,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -886,7 +890,7 @@
                 GracePeriod = 2
 
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -918,7 +922,7 @@
                 PromoInterest = 1,
                 GracePeriod = 2
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -992,7 +996,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {
@@ -1066,7 +1070,7 @@
                     }
                 }
             };
-            var actual = _service.Calculate(requestModel);
+            var actual = _service.Calculate(requestModel, null);
 
             var expected = new NewLoanResponseModel
             {

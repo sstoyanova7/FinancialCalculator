@@ -24,6 +24,6 @@
         {
             return allFees.Where(x => x.Type == FeeType.MonthlyManagementFee
                               || x.Type == FeeType.OtherMonthlyFees);
-        }       
+        }     
     }
 }

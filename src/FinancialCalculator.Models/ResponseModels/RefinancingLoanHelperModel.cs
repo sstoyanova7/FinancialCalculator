@@ -1,4 +1,6 @@
-﻿namespace FinancialCalculator.Models.ResponseModels
+﻿using System;
+
+namespace FinancialCalculator.Models.ResponseModels
 {
     public class RefinancingLoanHelperModel
     {
@@ -17,6 +19,12 @@
                 && EarlyInstallmentsFee == b.EarlyInstallmentsFee
                 && MonthlyInstallment == b.MonthlyInstallment
                 && Total == b.Total;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Interest: {0}, Period: {1}, EarlyInstallmentsFee: {2}, MonthlyInstallment: {3}, Total: {4}",
+                                Interest, Period, EarlyInstallmentsFee, MonthlyInstallment, Total);
         }
     }
 }
