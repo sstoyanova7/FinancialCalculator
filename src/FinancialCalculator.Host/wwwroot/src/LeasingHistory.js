@@ -18,7 +18,7 @@ class LeasingHistory extends React.Component {
             }).then(res => {
                 const resArrayData = [...res.data];
                 const stateArray = [];
-                console.log(res.data);
+               
                 resArrayData.forEach(data => {
                     let dataLength = data['calculation_Result'].length;
                     let posResult = data['calculation_Result'].indexOf('Result:');
@@ -35,7 +35,7 @@ class LeasingHistory extends React.Component {
                 this.setState({
                     result: stateArray
                 })
-                console.log(this.state.result);
+                
 
             }).catch(err => {
                 console.log(err);
@@ -61,13 +61,12 @@ class LeasingHistory extends React.Component {
                         ['id']: data['id'],
                         ['data']: subStringResult,
                         ['input']: subStringInput
-
                     })
                 })
                 this.setState({
                     result: stateArray
                 })
-                console.log(this.state.result);
+               
 
             }).catch(err => {
                 console.log(err);

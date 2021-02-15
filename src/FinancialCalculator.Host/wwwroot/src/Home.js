@@ -15,10 +15,35 @@ class Home extends React.Component {
             registerPassword: "",
             registerRepeatedPassword: "",
             cookie: "",
-            hasCookie: false
+            hasCookie: false,
+            inputStates: ["None", "None"],
+            errorMessages: ["", ""],
+            responseErrorMessage: ""
+            
         };
         this.homeSubmitButton = React.createRef();
         this.homeLogout = React.createRef();
+    }
+
+    validation = (input, index) => {
+        const value = parseInt(input);
+        // const inputStates = this.state.inputStates.slice();
+        // const errorMessages = this.state.errorMessages.slice();
+        let inputStates = [...this.state.inputStates];
+        let errorMessages = [...this.state.errorMessages];
+        let errormsg = "";
+        let state = "Error";
+        if(input === "") {
+            errormsg = "Стойността не може да е празна!";
+
+        }
+        else {
+            return true;
+        }
+        inputStates[index] = state;
+        errorMessages[index] = errormsg;
+        this.setState({ inputStates, errorMessages});
+        return false;
     }
 
     onLoginSubmit = () => {
@@ -26,23 +51,29 @@ class Home extends React.Component {
             "username": `${this.state.loginUsername}`,
             "password": `${this.state.loginPassword}`
         }
-        axios({
-            method: "post",
-            url: "http://localhost:5000/api/Authentication/sign-in",
-            data: { ...postInformation }
-        }).then(res => {
-            this.setState({
-                cookie: document.cookie,
-                hasCookie: true
+
+        const v0 = this.validation(this.state.loginUsername, 0);
+        const v1 = this.validation(this.state.loginPassword, 1);
+        if (v0 && v1) {
+            axios({
+                method: "post",
+                url: "http://localhost:5000/api/Authentication/sign-in",
+                data: { ...postInformation }
+            }).then(res => {
+                this.setState({
+                    cookie: document.cookie,
+                    hasCookie: true,
+                    errorInput: ""
+                })
+                this.props.loadCookie(this.state.loginUsername);
+                this.props.history.push(('/calculators'));
+            }).catch(err => {
+                this.setState({
+                    cookie: "",
+                    hasCookie: false
+                })
             })
-            this.props.loadCookie(this.state.loginUsername);
-            this.props.history.push(('/calculators'));
-        }).catch(err => {
-            this.setState({
-                cookie: "",
-                hasCookie: false
-            })
-        })
+        }
     }
 
     onRegisterSubmit = () => {
@@ -57,15 +88,19 @@ class Home extends React.Component {
             url: "http://localhost:5000/api/Authentication/sign-up",
             data: {...postInformation}
         }).then(res => {
-            console.log(res);
-            console.log(postInformation);
+
         }).catch(err => {
             console.log(err);
         })
     }
 
     onInputChange = (event) => {
-        const { name, value } = event.target;
+        const { name, value, } = event.target;
+        const inputStates = this.state.inputStates.slice();
+        const errorMessages = this.state.errorMessages.slice();
+        inputStates[event.target.getAttribute("data-index")] = "None";
+        errorMessages[event.target.getAttribute("data-index")] = "";
+        this.setState({ inputStates: inputStates, errorMessages: errorMessages});
         this.setState({
             [name]: value
         })
@@ -98,10 +133,12 @@ class Home extends React.Component {
                         <h3 className="entry">Вход</h3>
                             <form>   
                                 <div className="login-username">
-                                    <input type="text" name="loginUsername" value={this.state.loginUsername} onChange={this.onInputChange} placeholder="Потребителско име" />
+                                    <input data-index={0} value-state={this.state.inputStates[0]} type="text" name="loginUsername" value={this.state.loginUsername} onChange={this.onInputChange} placeholder="Потребителско име" />
+                                    <div className="error-message"><p>{this.state.errorMessages[0]}</p></div>
                                 </div>
                                 <div className="login-password">
-                                    <input type="password" name="loginPassword" value={this.state.loginPassword} onChange={this.onInputChange} placeholder="Парола" />
+                                    <input data-index={1} value-state={this.state.inputStates[1]} type="password" name="loginPassword" value={this.state.loginPassword} onChange={this.onInputChange} placeholder="Парола" />
+                                    <div className="error-message"><p>{this.state.errorMessages[1]}</p></div>
                                     <div className="text-input"><a href="#"><i>Забравена парола?</i></a></div>
                                 </div>
                                 <ui5-button onClick={this.onLoginSubmit} design="Emphasized">Вход</ui5-button>
