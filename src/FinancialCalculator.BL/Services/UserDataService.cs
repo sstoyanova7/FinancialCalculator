@@ -125,7 +125,7 @@
         }
         private void validateString(string value, string errorMessage)
         {
-            if (value.Length < 4 || value.Length < 40)
+            if (value.Length < 4 || value.Length > 40)
             {
                 throw new Exception(errorMessage);
             }
