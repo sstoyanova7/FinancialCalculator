@@ -99,7 +99,7 @@ class Navbar extends React.Component {
                             </ui5-list>
                             :
                             <ui5-list id="profile-options" mode="SingleSelect" separators="None">
-                                <ui5-li icon="settings">Настройки</ui5-li>
+                                <ui5-li icon="sys-help">Информация</ui5-li>
                                 <ui5-li icon="sys-help">История</ui5-li>
                                 <ui5-li icon="log">Изход</ui5-li>
                             </ui5-list>

@@ -27,7 +27,7 @@ class AboutUs extends React.Component {
 							<img src={img1} slot="avatar" alt="" />
                             	
 							<ui5-list separators="Inner">
-								<ui5-li>placeholder</ui5-li>
+								<ui5-li>F90756</ui5-li>
 							</ui5-list>
 						</ui5-card>
 					</div>
@@ -46,7 +46,7 @@ class AboutUs extends React.Component {
 							<img src={img7} slot="avatar" alt="" />
 	
 							<ui5-list separators="Inner">
-								<ui5-li>placeholder</ui5-li>
+								<ui5-li>F90773</ui5-li>
 							</ui5-list>
 						</ui5-card>
 					</div>
@@ -64,7 +64,7 @@ class AboutUs extends React.Component {
 							<img src={img3} slot="avatar" alt="" />
 	
 							<ui5-list separators="Inner">
-								<ui5-li>placeholder</ui5-li>
+								<ui5-li>F102155</ui5-li>
 							</ui5-list>
 						</ui5-card>
 					</div>
@@ -75,7 +75,7 @@ class AboutUs extends React.Component {
 	
 	
 							<ui5-list separators="Inner">
-								<ui5-li>placeholder</ui5-li>
+								<ui5-li>F91026</ui5-li>
 							</ui5-list>
 						</ui5-card>
 					</div>
@@ -85,7 +85,7 @@ class AboutUs extends React.Component {
 							<img src={img5} slot="avatar" alt="" />
 	
 							<ui5-list separators="Inner">
-								<ui5-li>placeholder</ui5-li>
+								<ui5-li>F102445</ui5-li>
 							</ui5-list>
 						</ui5-card>
 					</div>
@@ -103,7 +103,7 @@ class AboutUs extends React.Component {
 							<img src={img6} slot="avatar" alt="" />
 	
 							<ui5-list separators="Inner">
-								<ui5-li>placeholder</ui5-li>
+								<ui5-li>F91252</ui5-li>
 							</ui5-list>
 						</ui5-card>
 					</div>

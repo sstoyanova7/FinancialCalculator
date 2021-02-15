@@ -6,7 +6,7 @@ import CalculatorLizing from "./CalculatorLizing";
 import CalculatorRefinance from "./CalculatorRefinance";
 import CreditHistory from "./CreditHistory";
 import LeasingHistory from "./LeasingHistory";
-import RefinaneHistory from "./RefinaneHistory";
+import RefinanceHistory from "./RefinanceHistory";
 import AboutUs from "./AboutUs";
 import Home from "./Home";
 import Calculators from "./Calculators";
@@ -64,13 +64,29 @@ class App extends React.Component {
             />
           {/* <Route path="/" component={Navbar} cookie={this.state.cookie}/> */}
           <Switch>
-            <Route path="/calculators/credit" exact component={CalculatorCredit} />
-            <Route path="/calculators/lizing" exact component={CalculatorLizing} />
-            <Route path="/calculators/refinance" exact component={CalculatorRefinance} />
+          <Route
+              path="/history/credit" exact
+              render={(props) => (
+                  <CreditHistory {...props} cookie={this.state.cookie}/>
+              )}
+            />
+            <Route
+              path="/history/leasing" exact
+              render={(props) => (
+                  <LeasingHistory {...props} cookie={this.state.cookie}/>
+              )}
+            />
+            <Route
+              path="/history/refinance" exact
+              render={(props) => (
+                  <RefinanceHistory {...props} cookie={this.state.cookie}/>
+              )}
+            />
+            <Route path="/calculators/credit" cookie={this.state.cookie} exact component={CalculatorCredit} />
+            <Route path="/calculators/lizing" cookie={this.state.cookie} exact component={CalculatorLizing} />
+            <Route path="/calculators/refinance" cookie={this.state.cookie} exact component={CalculatorRefinance} />
             
-            <Route path="/history/credit" exact component={CreditHistory} />
-            <Route path="/history/leasing" exact component={LeasingHistory} />
-            <Route path="/history/refinance" exact component={RefinaneHistory} />
+           
             <Route
               path="/about-us" exact
               render={(props) => (
@@ -80,7 +96,7 @@ class App extends React.Component {
              <Route
               path="/history" exact
               render={(props) => (
-                  <History {...props}/>
+                  <History {...props} cookie={this.state.cookie}/>
               )}
             />
              <Route

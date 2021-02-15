@@ -9,22 +9,28 @@ class CreditHistory extends React.Component {
 
 
     componentDidMount() {
+      if(this.props.cookie !== "") {
         axios({
-            method: 'post',
+            method: 'get',
             url: 'http://localhost:5000/api/RequestHistory/?type=credit'
         }).then(res => {
             console.log(res);
         }).catch(err => {
             console.log(err);
         })
+      } 
     }
 
     render() {
-        return (
-            <div className = "page">
-                <h1>кредитно търсене</h1>
-            </div>
-        );
+        if(this.props.cookie !== "") {
+            return (
+                <div className = "page">
+                    <h1>кредитно търсене</h1>
+                </div>
+            );
+        } else {
+            return <div><p>not credit</p></div>;
+        }
     }
 }
 

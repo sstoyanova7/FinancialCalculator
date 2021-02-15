@@ -45,6 +45,25 @@ class Home extends React.Component {
         })
     }
 
+    onRegisterSubmit = () => {
+        const postInformation = {
+            "Username": this.state.registerUsername,
+            "Email": this.state.registerEmail,
+            "Password": this.state.registerPassword,
+            "Password2": this.state.registerRepeatedPassword
+        }
+        axios({
+            method: "post",
+            url: "http://localhost:5000/api/Authentication/sign-up",
+            data: {...postInformation}
+        }).then(res => {
+            console.log(res);
+            console.log(postInformation);
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
     onInputChange = (event) => {
         const { name, value } = event.target;
         this.setState({
@@ -104,7 +123,7 @@ class Home extends React.Component {
                             <div className="register-repeated-password">
                                 <input type="password" name="registerRepeatedPassword" value={this.state.registerRepeatedPassword} onChange={this.onInputChange} placeholder="Повторете паролата" />
                             </div>
-                                <ui5-button design="Emphasized">Регистрация</ui5-button>
+                                <ui5-button onClick={this.onRegisterSubmit} design="Emphasized">Регистрация</ui5-button>
                             </form>
                         </div>
                     </div>
