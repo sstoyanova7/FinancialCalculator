@@ -10,7 +10,6 @@
     using Serilog;
     using System.Net;
     using FinancialCalculator.BL.Validation;
-    using Microsoft.AspNetCore.Http;
 
     public class RefinancingLoanCalculatorService : ICalculatorService<RefinancingLoanResponseModel, RefinancingLoanRequestModel>
     {

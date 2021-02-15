@@ -217,6 +217,7 @@ class CalculatorCredit extends React.Component {
                     ...postInformation
                 }
             }).then(res => {
+                console.log(res.data);
                 const repaymentPlan = [...res.data.repaymentPlan];
                 console.log(res.data);
                 this.setState({
