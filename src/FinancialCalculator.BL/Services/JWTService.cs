@@ -31,12 +31,15 @@
 
         public string GenerateJSONWebToken(UserLoginRequestModel userInfo)
         {
-                UserModel user = userDataService.getFullUserByName(userInfo.Username).Result;
+            UserModel user = userDataService.getFullUserByName(userInfo.Username).Result;
+            if (user == null)
+            {
+                throw new NotFoundException("User does not exist");
+            }
             bool isProvidedPasswordCorrect = userDataService.isUserPasswordCorrect(user.Password, userInfo.Password);
-
             if (!isProvidedPasswordCorrect)
             {
-                throw new BadRequestException("Wrong Password");
+                throw new BadRequestException("Entered password does not match the existing one!");
             }
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
