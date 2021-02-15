@@ -14,7 +14,6 @@
 
     public class RefinancingLoanCalculatorService : ICalculatorService<RefinancingLoanResponseModel, RefinancingLoanRequestModel>
     {
-
         private readonly ILogger _logger;
         private IValidator<RefinancingLoanRequestModel> _refinancingLoanValidator;
         private ICalculatorService<NewLoanResponseModel, NewLoanRequestModel> _newLoanService;

@@ -1,5 +1,6 @@
 ﻿namespace FinancialCalculator.BL.Services
 {
+    using FinancialCalculator.Host.Exceptions;
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Models.ResponseModels;
     using FinancialCalculator.Services;
@@ -35,8 +36,7 @@
 
             if (!isProvidedPasswordCorrect)
             {
-                // change exception to custom one
-                throw new Exception("Wrong Password");
+                throw new BadRequestException("Wrong Password");
             }
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

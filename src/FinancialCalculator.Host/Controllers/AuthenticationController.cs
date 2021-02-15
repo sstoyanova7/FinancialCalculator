@@ -1,5 +1,6 @@
 ﻿namespace FinancialCalculator.Host.Controllers
 {
+    using FinancialCalculator.Host.Exceptions;
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Services;
     using Microsoft.AspNetCore.Authorization;

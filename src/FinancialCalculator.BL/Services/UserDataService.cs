@@ -7,6 +7,8 @@
     using BCrypt.Net;
     using Dapper;
     using FinancialCalculator.BL.Configuration.Database;
+    using FinancialCalculator.BL.Exceptions;
+    using FinancialCalculator.Host.Exceptions;
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Models.ResponseModels;
     using FinancialCalculator.Services;
@@ -29,6 +31,10 @@
             var parameters = new { Id = id };
             var result = conn.QueryFirstOrDefault<UserRequestModel>
                ("SELECT * FROM [User] WHERE Id = @Id", parameters);
+            if (result == null)
+            {
+                throw new NotFoundException("User with id: " + id + " does not exist!");
+            }
             return result;
         }
         public async Task<UserRequestModel> getUserByName(string name)
@@ -37,6 +43,10 @@
             var parameters = new { Username = name };
             var result = conn.QueryFirstOrDefault<UserRequestModel>
                ("SELECT * FROM [User] WHERE Username = @Username", parameters);
+            if (result == null)
+            {
+                throw new NotFoundException("User with name: " + name + " does not exist!");
+            }
             return result;
         }
 
@@ -54,17 +64,17 @@
             Match match = regex.Match(user.Email);
             if (!match.Success)
             {
-                throw new Exception("Email must have '@' and after that <string>.<string>, e.g. not_existing_email@example.com");
+                throw new BadRequestException("Email must have '@' and after that <string>.<string>, e.g. not_existing_email@example.com");
             }
             validateString(user.Username, "Username must between " + _minCharValidationUsername + " and " + _maxCharValidationUsername + " symbols!");
             validateString(user.Username, "Password must between " + _minCharValidationPassword + " and " + _maxCharValidationPassword + " symbols!");
             if (!user.Password.Contains(user.Password2))
             {
-                throw new Exception("Entered Password and Confirm password do not match");
+                throw new BadRequestException("Entered Password and Confirm password do not match");
             }
             if (await IsUserExistingByName(user.Username))
             {
-                throw new Exception("User with username: " + user.Username  + " already exist!");
+                throw new AlreadyExistException("User with username: " + user.Username  + " already exist!");
             }
 
             using var conn = await _database.CreateConnectionAsync();
@@ -82,13 +92,14 @@
 
         public async void deleteUserById(long id)
         {
+            await getUserById(id);
             using var conn = await _database.CreateConnectionAsync();
             var parameters = new { Id = id };
             await conn.ExecuteAsync("DELETE FROM [USER] WHERE Id=@Id", parameters);
         }
         public async Task<UserModel> getFullUserByName(string name)
         {
-            // add handling for not existing user
+            await getUserByName(name);
             using var conn = await _database.CreateConnectionAsync();
             var parameters = new { Username = name };
             var result = conn.QueryFirstOrDefault<UserModel>
@@ -127,7 +138,7 @@
         {
             if (value.Length < 4 || value.Length > 40)
             {
-                throw new Exception(errorMessage);
+                throw new BadRequestException(errorMessage);
             }
         }
     }
