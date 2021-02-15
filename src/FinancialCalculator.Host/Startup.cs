@@ -3,7 +3,6 @@ namespace FinancialCalculatorFE
     using System.Text;
     using FinancialCalculator.BL.Services;
     using FinancialCalculator.BL.Validation;
-    using FinancialCalculator.Host.Config;
     using FinancialCalculator.Models.RequestModels;
     using FinancialCalculator.Models.ResponseModels;
     using FinancialCalculator.Services;
@@ -71,9 +70,6 @@ namespace FinancialCalculatorFE
                     });
                 app.UseCors(a => a.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             }
-
-            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-            //app.UseExceptionHandler();
 
             app.UseAuthentication();
             app.UseRouting();

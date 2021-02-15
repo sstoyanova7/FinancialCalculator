@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using BCrypt.Net;
@@ -33,7 +34,11 @@
                ("SELECT * FROM [User] WHERE Id = @Id", parameters);
             if (result == null)
             {
-                throw new NotFoundException("User with id: " + id + " does not exist!");
+                return new UserRequestModel
+                {
+                    Status = HttpStatusCode.NotFound,
+                    ErrorMessage = "User with id: " + id + " does not exist!"
+                };
             }
             return result;
         }
@@ -45,7 +50,11 @@
                ("SELECT * FROM [User] WHERE Username = @Username", parameters);
             if (result == null)
             {
-                throw new NotFoundException("User with name: " + name + " does not exist!");
+                return new UserRequestModel
+                {
+                    Status = HttpStatusCode.NotFound,
+                    ErrorMessage = "User with name: " + name + " does not exist!"
+                };
             }
             return result;
         }
@@ -64,13 +73,13 @@
             Match match = regex.Match(user.Email);
             if (!match.Success)
             {
-                throw new BadRequestException("Email must have '@' and after that <string>.<string>, e.g. not_existing_email@example.com");
+                throw new BadRequestException("Incorrect Data! Email must have '@' and after that <string>.<string>, e.g. not_existing_email@example.com");
             }
-            validateString(user.Username, "Username must between " + _minCharValidationUsername + " and " + _maxCharValidationUsername + " symbols!");
-            validateString(user.Username, "Password must between " + _minCharValidationPassword + " and " + _maxCharValidationPassword + " symbols!");
+            validateString(user.Username, "Incorrect Data! Username must between " + _minCharValidationUsername + " and " + _maxCharValidationUsername + " symbols!");
+            validateString(user.Username, "Incorrect Data! Password must between " + _minCharValidationPassword + " and " + _maxCharValidationPassword + " symbols!");
             if (!user.Password.Contains(user.Password2))
             {
-                throw new BadRequestException("Entered Password and Confirm password do not match");
+                throw new BadRequestException("Incorrect Data! Entered Password and Confirm password do not match");
             }
             if (await IsUserExistingByName(user.Username))
             {
@@ -87,7 +96,7 @@
                 Password = hashedPassword,
             };
             
-            return await conn.ExecuteAsync("INSERT INTO [USER](Username, Email, Password) VALUES (@Username, @Email, @Password)", parameters);
+            return (await conn.ExecuteAsync("INSERT INTO [USER](Username, Email, Password) VALUES (@Username, @Email, @Password); SELECT SCOPE_IDENTITY();", parameters));
         }
 
         public async void deleteUserById(long id)
