@@ -132,6 +132,15 @@ h3 {
     outline: none;
 }
 
+
+.error-message {
+    font-size: 13px;
+    background-color: #de9dac;
+    margin-top:0.05rem;
+    text-align: center;
+}
+
+
 /*  */
 
 .starting-fees {

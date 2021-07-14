@@ -144,8 +144,9 @@ class CalculatorRefinance extends React.Component {
                     ...postInformation
                 }
             }).then(res => {
+                console.log(res);
                 if (res.data.status !== 200) {
-                   
+                        //
                 } else {
                     let currentLoan = res.data['currentLoan'];
                     let newLoan = res.data['newLoan'];

@@ -11,9 +11,10 @@ import "@ui5/webcomponents/dist/Dialog";
 
 class Navbar extends React.Component {
     constructor(props) {
+        
         super(props);
         this.state = {
-            profileName: ""
+         
         }
 
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
@@ -67,7 +68,10 @@ class Navbar extends React.Component {
 
     componentDidMount() {
         this.addEventListeners();
+        
     }
+
+   
 
 
     render() {

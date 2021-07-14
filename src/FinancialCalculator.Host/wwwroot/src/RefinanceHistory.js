@@ -17,7 +17,6 @@ class RefinanceHistory extends React.Component {
                 url: 'http://localhost:5000/api/RequestHistory/?type=refinance'
             }).then(res => {
                 const resArrayData = [...res.data];
-                console.log(res.data);
                 const stateArray = [];
                 resArrayData.forEach(data => {
                     let dataLength = data['calculation_Result'].length;
@@ -35,7 +34,6 @@ class RefinanceHistory extends React.Component {
                 this.setState({
                     result: stateArray
                 })
-                console.log(this.state.result);
             }).catch(err => {
                 console.log(err);
             })
@@ -49,7 +47,6 @@ class RefinanceHistory extends React.Component {
                 url: 'http://localhost:5000/api/RequestHistory/?type=refinance'
             }).then(res => {
                 const resArrayData = [...res.data];
-                console.log(res.data);
                 const stateArray = [];
                 resArrayData.forEach(data => {
                     let dataLength = data['calculation_Result'].length;
@@ -67,7 +64,7 @@ class RefinanceHistory extends React.Component {
                 this.setState({
                     result: stateArray
                 })
-                console.log(this.state.result);
+                
             }).catch(err => {
                 console.log(err);
             })

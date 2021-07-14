@@ -44,7 +44,7 @@ class CalculatorLizing extends React.Component {
         // const inputStates = this.state.inputStates.slice();
         // const errorMessages = this.state.errorMessages.slice();
         let inputStates = [...this.state.inputStates];
-        let errorMessages = [...this.state.errorMessages];        // create the copy of state array
+        let errorMessages = [...this.state.errorMessages];
         let errormsg = "";
         let state = "Error";
         if (index === 4) {
@@ -127,7 +127,6 @@ class CalculatorLizing extends React.Component {
             } else {
                 sBrowser = "unknown";
             }
-            console.log(sBrowser);
             let postInformation = {};
             if (!this.state.startingFee) {
                 postInformation = {
@@ -151,7 +150,6 @@ class CalculatorLizing extends React.Component {
                     }
                 }
             }
-            console.log(postInformation);
             axios({
                 method: 'post',
                 url: '/FinancialCalculator/api/calculateLeasingLoan',
